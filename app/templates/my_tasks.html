@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+	/* Стили таблицы (c-wd.ru) */
+	table.iksweb{text-decoration: none;border-collapse:collapse;width:100%;text-align:center;}
+	table.iksweb th{font-weight:500;font-size:14px; color:#ffffff;background-color:#0d2b40;}
+	table.iksweb td{font-size:12px;color:#08090a;}
+	table.iksweb td,table.iksweb th{white-space:pre-wrap;padding:15px 0px;line-height:12px;vertical-align: middle;border: 1px solid #354251;}	table.iksweb tr:hover{background-color:#f5f5f5}
+	table.iksweb td.rofl{white-space:nowrap; color:#0000ff}
+	table.iksweb tr:hover td{color:#08090a;cursor:pointer;}
+</style>
+
+
+<table class="iksweb table-bordered">
+    {% if current_user.is_boss==True and current_user.username==user.username %}
+    <h1> Найдено задач в подразделении: {{ tasks|length }} </h1>
+    <tr>
+        <th> Название </th>
+        <th> Описание задачи </th>
+        <th> Приоритет </th>
+        <th> Дедлайн </th>
+        <th> Логин исполнителя </th>
+        <th> Проект </th>
+        <th> Статус задачи </th>
+    </tr>
+    {% for task in tasks %}
+    {% if task.status== "на рассмотрении" %}
+    <tr bgcolor="#e4f7d5">
+    {% else %}
+    <tr>
+    {% endif %}
+    <td> <a href="{{ url_for('main.render_task', task_id=task.id) }}">{{ task.name }}</a></td>
+    <td> <a href="{{ url_for('main.render_task', task_id=task.id) }}">{{ task.description }}</a></td>
+    <td> {{ task.priority }} </td>
+    <td> {{ moment(task.deadline).format('LLL') }}</td>
+    <td> {% for user in task.users %} <a href="{{ url_for('main.render_tasks_list', username=user.username) }}"> {{ user.username }} </a> {% if task.users|length >1 %} <br/>{% endif %}{% endfor %} </td>
+    <td> {{ task.project.name }}</td>
+    <td> {{ task.status }} {% if task.status == "на рассмотрении" %} <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}"> <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <h1> Найдено активных задач у исполнителя <b> {{ user.username }} </b>: {{ user.tasks|length }} </h1>
+    <tr>
+        <th> Название </th>
+        <th> Приоритет</th>
+        <th> Дедлайн </th>
+        <th> Логин поручившего </th>
+        <th> Проект </th>
+        <th> Статус задачи </th>
+    </tr>
+    {% for task in user.tasks %}
+    {% if task.priority=="высокий" and task.status !="на рассмотрении" %}
+    <tr bgcolor="#f7b8b5">
+        {% else %}
+    <tr>
+    {% endif %}
+    <td class="rofl">
+        <a class="btn btn-link btn-link" data-toggle="modal" data-target="#staticBackdrop{{ task.id}}">{{ task.name }}</a>
+        <div class="modal fade" id="staticBackdrop{{ task.id }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel{{ task.id}}" aria-hidden="true">
+            <div class="modal-dialog  modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel{{ task.id }}"> Задача от руководителя <u> {{ task.author }}</u>: {{ task.name }} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p> Что требуется сделать: {{ task.description }}.</p>
+                        <p> Задача создана {{ moment(task.created_on).format('LLL') }}.</p>
+                        <p> Дедлайн установлен на {{ moment(task.deadline).format('LLL') }}.</p>
+                        {% if task.requests %}
+                        <hr>
+                        {% for request in task.requests %}
+                        <p> Заявка на исполнение № {{ request.id }} {% if request.denied_on %} ОТКЛОНЕНА
+                            {{ moment(request.denied_on).format('LLL') }}
+                            {% else %} ПРИНЯТА {{ moment(task.completed_on).format('LLL') }} {% endif %}
+                            <br> с комментарием: {{ request.boss_comment }}
+                            {% if task.executed_number %} <br> № исполнения: {{ task.executed_number }}
+                            <br> Исполнитель: {{ task.executor.username }} {% endif %}</p>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+                        {% if not(task.completed_on) %}
+                       <a class="btn btn-dark" href="{{ url_for('main.render_task_execution', username=user.username, task_id=task.id) }}"> Исполнить </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+        <td> {{ task.priority }} </td>
+        <td> {{ moment(task.deadline).format('LLL') }}</td>
+        <td> {{ task.author }} </td>
+        <td> {{ task.project.name }}</td>
+        <td> {{ task.status }} {% if task.status == "в работе" %} <a href="{{ url_for('main.render_task_execution', username=user.username, task_id=task.id) }}"> <img src="{{ url_for('static', filename='pencil.png') }}" width="16" height="16" title="Отправить заявку на исполнение"> </a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+
+{% if fig and current_user.is_boss==True and current_user.username==user.username %}
+{% autoescape off %}
+{{ fig }}
+{{ test }}
+{{ test1 }}
+{% endautoescape %}
+{% endif %}
+
+{% endblock %}

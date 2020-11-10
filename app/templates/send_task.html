@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+   <div class="row mt-5">
+        <div class="col-4">
+          <form action="" method="post">
+            {{ form.csrf_token() }}
+          <h4 class="">Отправить исполнение задачи с названием "{{ task.name }}" руководству на рассмотрение</h4>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.comment.label }}
+                      {{ form.comment(class="font-weight-bold form-control", placeholder="Описание того, что было сделано исполнителем", rows="5") }}
+                      {% if form.comment.errors %}
+                      {% for error in form.comment.errors %}
+                      {{ error }}
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.number_of_execution.label }}
+                      {{ form.number_of_execution(class="font-weight-bold form-control", placeholder="№ 1936/1936/1936-") }}
+                      {% if form.number_of_execution.errors %}
+                      {% for error in form.number_of_execution.errors %}
+                      {{ error }}
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+        {{ form.submit(class="mt-2 mb-5 btn btn-danger") }}
+          </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,120 @@
+2020-11-08 11:45:49,496 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:47:07,353 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:57:59,097 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:00:49,151 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:04:05,789 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:04:06,888 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 55, in render_tasks_list
+    show_colorbar=True, showgrid_y=True, group_tasks=True, show_hover_fill=False, colors='Blues')
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 1012, in create_gantt
+    show_hover_fill=show_hover_fill,
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 449, in gantt_colorscale
+    "Error. The number of colors in 'colors' must be no less "
+_plotly_utils.exceptions.PlotlyError: Error. The number of colors in 'colors' must be no less than the number of unique index values in your group column.
+2020-11-08 12:05:27,162 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:09:09,765 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:11:28,292 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:11:29,396 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 63, in render_tasks_list
+    y="Задача", template='plotly_white', title='Диаграмма Ганта для проекта')
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/express/_chart_types.py", line 401, in timeline
+    layout_patch=dict(barmode="overlay"),
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/express/_core.py", line 1826, in make_figure
+    args = build_dataframe(args, constructor)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/express/_core.py", line 1359, in build_dataframe
+    args, wide_mode, var_name, value_name
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/express/_core.py", line 1164, in process_args_into_dataframe
+    raise ValueError(err_msg)
+ValueError: Value of 'y' is not the name of a column in 'data_frame'. Expected one of ['Task', 'Start', 'Finish', 'Исполнитель'] but received: Задача
+2020-11-08 12:11:48,749 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:46:32,110 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:46:35,749 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 69, in render_tasks_list
+    test_fig.add_trace(go.Pie(labels=labels, values=values), row=1, col=2)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/basedatatypes.py", line 1868, in add_trace
+    exclude_empty_subplots=exclude_empty_subplots,
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/basedatatypes.py", line 1993, in add_traces
+    self._set_trace_grid_position(trace, row, col, secondary_y)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/basedatatypes.py", line 2086, in _set_trace_grid_position
+    trace, self.layout, grid_ref, row, col, secondary_y
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/subplots.py", line 1360, in _set_trace_grid_reference
+    col=col,
+ValueError: Trace type 'pie' is not compatible with subplot type 'xy'
+at grid position (1, 2) 
+
+See the docstring for the specs argument to plotly.subplots.make_subplots 
+for more information on subplot types
+2020-11-08 12:48:09,504 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 12:48:11,492 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 66, in render_tasks_list
+    test_fig = io.to_html(test_fig, include_plotlyjs=False, full_html=False)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/io/_html.py", line 131, in to_html
+    fig_dict = validate_coerce_fig_to_dict(fig, validate)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/io/_utils.py", line 23, in validate_coerce_fig_to_dict
+    typ=type(fig), v=fig
+ValueError: 
+The fig parameter must be a dict or Figure.
+    Received value of type <class 'plotly.graph_objs._pie.Pie'>: Pie({
+    'labels': ['egor', 'dagestn'], 'values': [4500, 2500]
+})
+2020-11-08 12:49:16,988 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul>
+    <p> здесь будет главная </p>
+    <p> Добро пожаловать в информационную систему подразделения! </p>
+</ul>
+
+<div class="row row-cols-1 row-cols-md-3">
+  {% for project in projects %}
+  <div class="col mb-4">
+    <div class="card h-100">
+      <img src="{{ url_for('static', filename='11.png') }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ project.name }}</h5>
+          <p class="card-text">{{ project.description }}</p>
+                <a href="{{ url_for('main.render_project', project_id=project.id) }}" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

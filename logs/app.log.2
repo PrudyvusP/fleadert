@@ -1,0 +1,109 @@
+2020-11-09 16:34:03,592 ERROR: Exception on /edit_profile/2/ [POST] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 136, in render_edit_profile
+    return redirect(url_for('render_user_page', username=current_user.username))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/helpers.py", line 370, in url_for
+    return appctx.app.handle_url_build_error(error, endpoint, values)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2216, in handle_url_build_error
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/helpers.py", line 358, in url_for
+    endpoint, values, method=method, force_external=external
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/werkzeug/routing.py", line 2179, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.BuildError: Could not build url for endpoint 'render_user_page' with values ['username']. Did you mean 'main.render_user_page' instead?
+2020-11-09 16:34:55,668 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:37:36,493 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:38:33,205 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:39:10,447 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:39:51,776 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:41:26,196 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:42:43,332 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:45:21,027 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:49:04,642 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:52:26,788 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:55:30,268 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:56:49,772 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:57:08,066 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:57:37,154 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:58:00,099 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 16:58:35,361 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:03:16,385 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:03:42,318 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:15:30,844 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:20:32,168 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:22:46,568 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:28:36,013 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:34:12,709 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:35:38,088 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:37:18,502 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:37:57,971 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:39:22,892 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:42:59,539 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:43:30,208 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:43:47,658 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:45:11,853 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:48:46,888 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:50:39,096 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:53:38,113 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:54:14,408 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:55:38,431 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:57:55,365 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:58:46,769 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 17:58:49,012 ERROR: Exception on /my_tasks/prudyvusp/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 99, in render_tasks_list
+    test1=test_fig)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/templating.py", line 140, in render_template
+    ctx.app,
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/templating.py", line 120, in _render
+    rv = template.render(context)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/ppa/PycharmProjects/fleadert/app/templates/my_tasks.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/ppa/PycharmProjects/fleadert/app/templates/base.html", line 71, in top-level template code
+    {% block content %}
+  File "/home/ppa/PycharmProjects/fleadert/app/templates/my_tasks.html", line 74, in block "content"
+    <p> Заявка на исполнение № {{ request.id }} - {% if request.denied_on %} ОТКЛОНЕНА {{ moment(request.denied_on).format('LLL') }} {% else %} ПРИНЯТА {{ moment(task_completed).format('LLL') }} {% endif %} с комментарием: {{ request.boss_comment }} .</p>
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_moment.py", line 153, in format
+    return self._render("format", format=(fmt or ''), refresh=refresh)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_moment.py", line 139, in _render
+    t = self._timestamp_as_iso_8601(self.timestamp)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_moment.py", line 135, in _timestamp_as_iso_8601
+    return timestamp.strftime('%Y-%m-%dT%H:%M:%S' + tz)
+jinja2.exceptions.UndefinedError: 'task_completed' is undefined
+2020-11-09 17:59:19,029 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]

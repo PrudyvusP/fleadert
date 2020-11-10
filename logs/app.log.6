@@ -1,0 +1,116 @@
+2020-11-08 13:50:48,442 ERROR: Exception on /index/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 230, in render_index
+    return render_template('index.html', title="Главная", projects=projects)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/ppa/PycharmProjects/fleadert/app/templates/index.html", line 44, in template
+    {% endblock %}
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endblock'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'endfor' or 'else'. The innermost block that needs to be closed is 'for'.
+2020-11-08 13:51:46,932 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 13:52:32,488 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:00:26,484 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:03:24,601 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:07:06,646 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:07:06,984 ERROR: Exception on /index/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 230, in render_index
+    return render_template('index.html', title="Главная", projects=projects)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 930, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 883, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 857, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/loaders.py", line 127, in load
+    code = environment.compile(source, name, filename)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 638, in compile
+    self.handle_exception(source=source_hint)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/ppa/PycharmProjects/fleadert/app/templates/index.html", line 11, in template
+    {% for project in projects }}
+jinja2.exceptions.TemplateSyntaxError: unexpected '}'
+2020-11-08 14:07:19,401 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:07:49,107 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:08:20,274 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:08:54,705 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:10:51,838 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:14:39,341 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:14:55,283 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:15:25,796 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 14:17:38,445 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:24:13,283 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:34:13,901 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:34:55,250 ERROR: Exception on /create_task/ [POST] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 146, in render_create_task
+    for executor_id in form.users.data:
+TypeError: 'int' object is not iterable
+2020-11-09 11:35:50,774 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:40:24,518 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:57:01,031 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:57:27,366 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 11:57:40,843 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 12:00:17,593 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-09 12:02:04,133 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mt-4">
+        <div class="col-4">
+          <form action="" method="post">
+            {{ form.csrf_token() }}
+          <h4 class="">Создать задачу</h4>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.project.label }}
+                          {{ form.project(class="custom-select custom-select-lg", size="5") }}
+                          {% if form.project.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.project.errors %}
+                              <span>{{ error }}</span>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.name.label }}
+                      {{ form.name(class="font-weight-bold form-control", placeholder="Краткая формулировка задачи") }}
+                      {% if form.name.errors %}
+                      {% for error in form.name.errors %}
+                      <span style="color:red;"> {{ error }}</span>
+                      {% endfor %}
+                      {% endif %}
+            </div>
+          </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.description.label }}
+                      {{ form.description(class="font-weight-bold form-control", placeholder="Подробное описание задачи и входные данные; Если исполнителей несколько, то нужно указать здесь кто обобщает", rows="5") }}
+                      {% if form.description.errors %}
+                      {% for error in form.description.errors %}
+                      <span style="color:red;"> {{ error }}</span>
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.deadline.label }}
+                      {{ form.deadline(class="font-weight-bold form-control") }}
+                      {% if form.deadline.errors %}
+                      {% for error in form.deadline.errors %}
+                      <span style="color:red;"> {{ error }}</span> <br />
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.priority.label }}
+                      {% for priority in form.priority %}
+                      <tr>
+                          <td>{{ priority(class="font-weight-bold") }}</td>
+                          <td>{{ priority.label }}</td>
+                      </tr>
+                      {% endfor %}
+                      {% if form.priority.errors %}
+                      {% for error in form.priority.errors %}
+                      <span style="color:red;"> {{ error }}</span>
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.users.label }}
+                          {{ form.users(class="custom-select custom-select-lg", size="5") }}
+                          {% if form.users.errors %}
+                          <div class="invalid-feedback">
+                              {% for error in form.users.errors %}
+                              <span>{{ error }}</span>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                  </div>
+              </div>
+
+              {{ form.submit(class="mt-2 mb-5 btn btn-danger btn-block") }}
+          </form>
+        </div>
+    </div>
+{% endblock %}

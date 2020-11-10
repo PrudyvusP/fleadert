@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title> Wiki-{{ title }}</title>
+  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <main class="container mt-3">
+    <div class="row mt-5">
+      <div class="col-10 col-md-6 offset-1 offset-md-3">
+        <div class="card mb-3">
+          <div class="card-body text-center pt-5">
+            <img src="{{ url_for('static', filename='check.png') }}" class="mb-3" width="65" alt="">
+            <h2 class="h3 card-title mt-4 mb-2">Задача создана!</h2>
+          </div>
+          <hr />
+          <div class="card-body mx-5">
+            <p><b>Название:</b> {{ task.name }} </p>
+            <p><b>Описание:</b> {{ task.description }}</p>
+            <p><b>Дедлайн:</b> {{ moment(task.deadline).format('LLL') }} </p>
+            <p><b>{% if task.users|length>1 %} Исполнители: {% else %} Исполнитель: {% endif %}</b> {% for user in task.users %} {{ user.username }} {% endfor %}</p>
+          </div>
+          <a href="{{ url_for('main.render_create_task') }}" class="btn btn-dark btn-sm mt-2">Создать еще задачу</a>
+          <a href="{{ url_for('main.render_index') }}" class="btn btn-dark btn-sm mt-2">Вернуться на главную</a>
+          <a href="https://stepik.org" class="btn btn-danger btn-sm mt-2">Покинуть сайт =( </a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="/static/bootstrap/js/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="/static/bootstrap/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="/static/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  {{ moment.include_moment() }}
+  {{ moment.lang('ru') }}
+</body>
+</html>

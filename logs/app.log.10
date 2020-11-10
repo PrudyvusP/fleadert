@@ -1,0 +1,104 @@
+2020-11-08 08:18:25,080 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:18:42,891 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:19:16,705 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:26:10,164 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:26:10,627 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 60, in render_tasks_list
+    fig2 = ff.create_gantt(test, index_col='Resource', show_colorbar=True, group_tasks=True)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 1012, in create_gantt
+    show_hover_fill=show_hover_fill,
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 331, in gantt_colorscale
+    index_vals.sort()
+TypeError: '<' not supported between instances of 'User' and 'User'
+2020-11-08 08:27:12,464 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:27:16,307 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 61, in render_tasks_list
+    fig2 = ff.create_gantt(test, index_col='Resource', show_colorbar=True, group_tasks=True)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 1012, in create_gantt
+    show_hover_fill=show_hover_fill,
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/plotly/figure_factory/_gantt.py", line 331, in gantt_colorscale
+    index_vals.sort()
+TypeError: '<' not supported between instances of 'User' and 'User'
+2020-11-08 08:28:04,015 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:28:07,016 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 52, in render_tasks_list
+    for user in task.users.username:
+AttributeError: 'InstrumentedList' object has no attribute 'username'
+2020-11-08 08:28:42,046 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:30:09,636 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:58:43,421 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 08:59:54,718 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 09:01:21,605 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 09:01:38,878 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 09:13:56,941 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 10:25:35,895 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 10:26:03,769 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:06:39,154 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:06:39,881 ERROR: Exception on /my_tasks/chief/ [GET] [in /home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py:1892]
+Traceback (most recent call last):
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ppa/PycharmProjects/fleadert/venv/lib/python3.6/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/ppa/PycharmProjects/fleadert/app/main/routes.py", line 52, in render_tasks_list
+    for user in task.users.username:
+AttributeError: 'InstrumentedList' object has no attribute 'username'
+2020-11-08 11:07:16,517 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:14:36,599 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:32:40,369 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]
+2020-11-08 11:45:06,688 INFO: App startup [in /home/ppa/PycharmProjects/fleadert/app/__init__.py:54]

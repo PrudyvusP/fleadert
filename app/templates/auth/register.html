@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title> Wiki-{{ title }}</title>
+  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+  <main class="container">
+    <div class="row">
+      <div class="col-8 col-lg-4 offset-2 offset-lg-4">
+        <form class="form-signin pt-5" action="" method="post">
+            {{ form.csrf_token() }}
+          <div class="text-center mt-5 b-1">
+            <img class="mb-2" src="{{ url_for('static', filename='emblem.png') }}" width="140" height="79">
+            <h1 class="h3 mb-3 font-weight-normal">Wiki Reborn 2020</h1>
+            <p class="h5 font-weight-light">Регистрация</p>
+          </div>
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger" role="alert"> {{ message }} </div>
+            {% endfor %}
+            <div class="mt-2 form-label-group">
+                {{ form.username.label(class="text-muted") }}
+                {{ form.username(class="form-control", placeholder="фамилия и первая буква имени (например, prudyvusp)") }}
+                {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                <span style="color:red;"> {{ error }}  </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mt-2 form-label-group">
+                {{ form.email.label(class="text-muted") }}
+                {{ form.email(class="form-control", placeholder="username@dns_name.local") }}
+                {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                <span style="color:red;"> {{ error }}  </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mt-2 form-label-group">
+                {{ form.password.label(class="text-muted") }}
+                {{ form.password(class="form-control") }}
+                {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <span style="color:red;"> {{ error }}  </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mt-2 form-label-group">
+                {{ form.password2.label(class="text-muted") }}
+                {{ form.password2(class="form-control") }}
+                {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                <span style="color:red;"> {{ error }}  </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mt-2 form-label-group">
+                {{ form.is_admin.label(class="text-muted") }}
+                {{ form.is_admin(class="form-control") }}
+                {% if form.is_admin.errors %}
+                {% for error in form.is_admin.errors %}
+                <span style="color:red;"> {{ error }}  </span>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mt-2">{{ form.submit(class="btn btn-lg btn-danger btn-block") }}</div>
+        </form>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
