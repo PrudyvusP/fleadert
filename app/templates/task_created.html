@@ -21,8 +21,10 @@
             <p><b>Описание:</b> {{ task.description }}</p>
             <p><b>Дедлайн:</b> {{ moment(task.deadline).format('LLL') }} </p>
             <p><b>{% if task.users|length>1 %} Исполнители: {% else %} Исполнитель: {% endif %}</b> {% for user in task.users %} {{ user.username }} {% endfor %}</p>
+            <p><b>Проект:</b> {{ task.project.name }}</p>
           </div>
           <a href="{{ url_for('main.render_create_task') }}" class="btn btn-dark btn-sm mt-2">Создать еще задачу</a>
+          <a href="{{ url_for('main.render_project', project_id=task.project.id) }}" class="btn btn-dark btn-sm mt-2">Перейти к проекту</a>
           <a href="{{ url_for('main.render_index') }}" class="btn btn-dark btn-sm mt-2">Вернуться на главную</a>
           <a href="https://stepik.org" class="btn btn-danger btn-sm mt-2">Покинуть сайт =( </a>
         </div>

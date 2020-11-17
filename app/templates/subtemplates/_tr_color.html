@@ -1,0 +1,7 @@
+{% if task.priority=="высокий" or task.deadline|timedelta < 1 %}
+table-danger
+{% elif task.status == "на рассмотрении" or (task.deadline|timedelta >= 1 and task.deadline|timedelta <= 3) %}
+table-warning
+{% else %}
+table-light
+{% endif %}

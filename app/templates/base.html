@@ -29,7 +29,11 @@
     }
   </style>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/static/plotly/plotly-locale-ru.js"></script>
+    <script>Plotly.setPlotConfig({locale: 'ru'})</script>
     <!-- <script src="/static/plotly/plotly.min.js" charset="utf-8"></script>
+    <script src="/static/plotly/plotly-locale-ru.js"></script>
+    <script>Plotly.setPlotConfig({locale: 'ru'})</script>
     <script src="/static/bootstrap/js/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
     <script src="/static/bootstrap/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
@@ -57,6 +61,7 @@
           {% else %}
           <a href="{{ url_for('main.render_tasks_list', username=current_user.username) }}" class="btn btn-light btn-sm ml-4"> Мои задачи </a>
           {% endif %}
+          <a href="{{ url_for('main.render_index') }}" class="btn btn-light btn-sm ml-4"> Проекты </a>
           <a href="{{ url_for('main.render_all_users') }}" class="btn btn-light btn-sm ml-4"> Подразделение </a>
           <div class="dropdown-divider"></div>
           <a href="{{ url_for('auth.logout') }}" class="btn btn-light btn-sm ml-4"> Выйти </a>
@@ -79,7 +84,7 @@
 <footer class="footer">
     <nav class="container navbar navbar-light bg-light">
       <ul class="navbar-nav mr-auto">
-        <div class="h4 nav-link">Flask Leader Task</div>
+        <div class="h4 nav-link">Flask LeaderTask</div>
       </ul>
         <a class="mr-2" href="https://getbootstrap.com"> <img src="{{ url_for('static', filename='bootstrape.png') }}" width="16" height="16" title="Powered by Bootstrap"> </a>
         <a class="mr-2" href="https://github.com/pallets/flask"> <img src="{{ url_for('static', filename='logo-flask.png') }}" width="20" height="20" title="Powered by Flask"> </a>

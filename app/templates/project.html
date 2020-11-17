@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style> {% include 'subtemplates/tasks.css' %}</style>
+<script src="/static/bootstrap/js/tablesort.min.js"></script>
 
 <blockquote class="blockquote text-right">
   <p class="mb-0"> {{ quote }} </p>
@@ -8,6 +10,41 @@
 </blockquote>
 
 <h1> {{ project.name }} </h1>
+<h4> Количество задач в проекте: {{ project.tasks|length }}</h4>
 
+<table class="table table-hover table-sm text-center" id="table-id">
+    <thead class="thead-dark">
+    <tr>
+        <th> Название </th>
+        <th> Приоритет </th>
+        <th data-sort-method='none'> Дедлайн </th>
+        <th> Логин исполнителя </th>
+        <th> Статус задачи </th>
+    </tr>
+    </thead>
+    {% for task in project.tasks %}
+    {% if task.status == "на рассмотрении" %}
+    <tr class="table-warning">
+        {% elif task.status== "выполнена" %}
+    <tr class="table-success">
+    {% else %}
+    <tr class="table-light">
+    {% endif %}
+        <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
+        <td class="align-middle"> {{ task.priority }} </td>
+        <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
+        <td class="align-middle"> {% for user in task.users %} <a href="{{ url_for('main.render_tasks_list', username=user.username) }}"> {{ user.username }} </a> {% if task.users|length >1 %} <br/>{% endif %}{% endfor %} </td>
+        <td class="align-middle"> {{ task.status }} {% if task.status == "на рассмотрении" %} <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}"> <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %} </td>
+    </tr>
+    {% endfor %}
+</table>
 
+{% autoescape off %}
+{{ fig }}
+{% endautoescape %}
+
+<script>
+  new Tablesort(document.getElementById('table-id'));
+</script>
 {% endblock %}
+

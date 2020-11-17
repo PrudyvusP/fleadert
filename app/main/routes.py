@@ -5,18 +5,21 @@ import string
 import json
 from plotly import figure_factory as ff, io
 from plotly import express as px
-from plotly.subplots import make_subplots
 from plotly import graph_objects as go
 from dateutil.tz import tzutc
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import render_template, flash, redirect, url_for, current_app, abort
 from flask_login import current_user, login_required
 from app import db
 from app.main.forms import TaskForm, TaskExecutionForm, EditProfileForm, BossCheckRequestForm, ProjectForm
-from app.models import User, Task, Request, Project
+from app.models import User, Task, Request, Project, user_task_association
 from app.main import bp
 from app.email import send_email
 
+
+def utc_dt_to_local_dt(utc_dt):
+    local_dt = utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
+    return local_dt
 
 
 def validate_image(stream):
@@ -57,6 +60,29 @@ def render_project(project_id):
         data_json_list = json.load(f)
         rand_quote = random.choice(data_json_list)
     project = Project.query.get_or_404(project_id)
+
+    project_tasks_query = Task.query.join(Project, Task.project_id == project_id).order_by(Task.deadline)
+    #test_project_tasks_query = db.session.query(Task).join(Project, Task.project_id == project_id).all()
+   # print(test_project_tasks_query)
+    test = Task.query.filter(Task.project_id == project_id).filter(Task.status != 'выполнена')\
+        .order_by(Task.deadline).all()
+    for k in test:
+        print(k.name)
+        print(type(k.deadline - datetime.utcnow()))
+        print(isinstance(k.deadline, datetime))
+    if project.tasks:
+        gannt_list = []
+        for task in project.tasks:
+            for user in task.users:
+                gannt_list.append(dict(Task=task.name, Start=utc_dt_to_local_dt(task.created_on),
+                                       Finish=utc_dt_to_local_dt(task.deadline),
+                                       Исполнитель=user.username))
+        fig = ff.create_gantt(gannt_list, index_col='Исполнитель', title='Диаграмма Ганта для проекта {}'.format(project.name),
+                              show_colorbar=True, showgrid_y=True, showgrid_x=True, group_tasks=True)
+        fig.update_layout(template='plotly_white')
+        fig = io.to_html(fig, include_plotlyjs=False, full_html=False)
+        return render_template('project.html', title="Проект", project=project, quote=rand_quote.get("quote"),
+                               author=rand_quote.get("author"), fig=fig)
     return render_template('project.html', title="Проект", project=project, quote=rand_quote.get("quote"),
                            author=rand_quote.get("author"))
 
@@ -65,48 +91,50 @@ def render_project(project_id):
 @login_required
 def render_tasks_list(username):
     query_user = User.query.filter_by(username=username).first_or_404()
-    tasks = Task.query.order_by(Task.deadline).all()
-
-    if tasks:
+    tasks_query = Task.query.join(user_task_association, (user_task_association.c.task_id == Task.id)).join(User, (
+                user_task_association.c.user_id == User.id)).filter(Task.status != 'выполнена').order_by(Task.deadline)
+    tasks_for_boss = tasks_query.all()
+    tasks_for_user = tasks_query.filter(User.username == username).all()
+    if tasks_for_boss:
         gannt_list = []
         timeline_list = []
-        for task in tasks:
+        for task in tasks_for_boss:
             for user in task.users:
-                gannt_list.append(dict(Task=task.name, Start=task.created_on, Finish=task.deadline,
+                gannt_list.append(dict(Task=task.name,
+                                       Start=utc_dt_to_local_dt(task.created_on),
+                                       Finish=utc_dt_to_local_dt(task.deadline),
                                        Исполнитель=user.username))
                 timeline_list.append(dict(Задача=task.name, Начало=task.created_on, Завершение=task.deadline,
                                           Исполнитель=user.username))
 
-        fig = ff.create_gantt(gannt_list, index_col='Исполнитель', title='Диаграмма Ганта для задач',
-                              show_colorbar=True, showgrid_y=True, group_tasks=True)
-        fig.update_yaxes(autorange='reversed')
-        #ig.update_traces(overwrite=True, marker={'opacity': 0.4})
-        fig.update_layout(title_text="Диаграмма Ганта для проектов", title_font_size=24)
+        gannt = ff.create_gantt(gannt_list, index_col='Исполнитель', title='Диаграмма Ганта для актуальных задач',
+                                show_colorbar=True, showgrid_y=True, group_tasks=True)
+        gannt.update_yaxes(autorange='reversed')
+        gannt.update_layout(title_font_size=24, template='plotly_white')
+        gannt = io.to_html(gannt, include_plotlyjs=False, full_html=False)
+
+        timeline = px.timeline(timeline_list, x_start="Начало", x_end="Завершение", color='Исполнитель', opacity=0.7,
+                               y="Задача", template='plotly_white', title='Диаграмма Ганта для проекта')
+        timeline = io.to_html(timeline, include_plotlyjs=False, full_html=False)
 
         labels = ['egor', 'dagestn']
         values = [4500, 2500]
-
         test_fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
         test_fig = io.to_html(test_fig, include_plotlyjs=False, full_html=False)
-
-        fig = io.to_html(fig, include_plotlyjs=False, full_html=False)
-
-        fig2 = px.timeline(timeline_list, x_start="Начало", x_end="Завершение", color='Исполнитель', opacity=0.7,
-                           y="Задача", template='plotly_white', title='Диаграмма Ганта для проекта')
-        fig2 = io.to_html(fig2, include_plotlyjs=False, full_html=False)
-
-        return render_template('my_tasks.html', user=query_user, tasks=tasks, title="Задачи", fig=fig, test=fig2,
-                               test1=test_fig)
-    return render_template('my_tasks.html', user=query_user, tasks=tasks, title="Задачи")
-
-
-# TODO время на диаграмме - UTC :(
+        return render_template('my_tasks.html', title="Задачи", gannt_fig=gannt, timeline_fig=timeline, test1=test_fig,
+                               tasks_for_user=tasks_for_user, tasks_for_boss=tasks_for_boss, user=query_user)
+    return render_template('my_tasks.html', user=query_user, tasks_for_user=tasks_for_user,
+                           tasks_for_boss=tasks_for_boss, title="Задачи")
 
 
 @bp.route('/user/<username>/', methods=['get'])
 @login_required
 def render_user_page(username):
     query_user = User.query.filter_by(username=username).first_or_404()
+
+    test = Task.query.join(user_task_association, (user_task_association.c.task_id == Task.id)).join(User,
+                                                                                                     (user_task_association.c.user_id == User.id)).filter(User.username == username).all()
+
     return render_template('user.html', user=query_user, title="Личный кабинет")
 
 
@@ -181,13 +209,6 @@ def render_create_task():
     return render_template('create_task.html', form=form, users=executors, projects=projects, title="Создать задачу")
 
 
-@bp.route('/task/<int:task_id>/')
-@login_required
-def render_task(task_id):
-    task = Task.query.get_or_404(task_id)
-    return render_template('task.html', task=task, title="Просмотр задачи")
-
-
 @bp.route('/task_created/<int:task_id>/')
 @login_required
 def render_task_created(task_id):
@@ -257,3 +278,4 @@ def render_all_users():
 @login_required
 def render_admin():
     return render_template('admin.html', title="Админка")
+

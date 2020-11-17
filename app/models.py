@@ -33,7 +33,11 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(12))
     avatar = db.Column(db.String(50), nullable=True, default='default.png')
     last_seen = db.Column(db.DateTime(50), default=datetime.utcnow())
+
+
     tasks = db.relationship('Task', secondary=user_task_association, back_populates='users')
+
+
     requests = db.relationship('Request', back_populates='user')
     projects = db.relationship('Project', secondary=user_project_association, back_populates='users')
     executed_tasks = db.relationship('Task', back_populates='executor')
@@ -82,7 +86,10 @@ class Task(db.Model):
     executed_number = db.Column(db.String(30), nullable=True)
     executor_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     executor = db.relationship('User', back_populates='executed_tasks')
+
     users = db.relationship('User', secondary=user_task_association, back_populates='tasks')
+
+
     requests = db.relationship('Request', back_populates='task')
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = db.relationship('Project', back_populates='tasks')

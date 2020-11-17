@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_wtf.file import FileField
 from wtforms import TextAreaField, StringField, SubmitField, RadioField, DateTimeField,\
     SelectMultipleField, SelectField
@@ -10,7 +10,7 @@ from app.models import User
 class TaskForm(FlaskForm):
     name = StringField('Название задачи', validators=[InputRequired(message="Заполните поле")])
     description = TextAreaField('Описание задачи', validators=[InputRequired(message="Заполните поле")])
-    deadline = DateTimeField('Срок:', default=datetime.now(), format='%Y-%m-%d %H:%M')
+    deadline = DateTimeField('Срок:', default=datetime.now()+timedelta(days=1), format='%Y-%m-%d %H:%M')
     users = SelectMultipleField('Исполнители', choices=[], coerce=int, validators=[InputRequired(message="Заполните "
                                                                                                          "поле")])
     priority = RadioField('Приоритет:', choices=[("высокий", "высокий"), ("средний", "средний"), ("низкий", "низкий")],
