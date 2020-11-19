@@ -22,6 +22,7 @@ mail = Mail()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
@@ -37,7 +38,7 @@ def create_app(config_class=Config):
     from app.main import bp2 as filters_bp
     app.register_blueprint(filters_bp)
 
-    if app.debug is False:
+    if not app.debug:
         mail_handler = SMTPHandler(mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
                                fromaddr='no-reply@' + app.config['MAIL_SERVER'],
                                toaddrs=[app.config['FLASKY_ADMIN_RECIEVER']],
@@ -54,7 +55,7 @@ def create_app(config_class=Config):
         app.logger.addHandler(file_handler)
         app.logger.setLevel(logging.INFO)
         app.logger.info('App startup')
-        return app
+    return app
 
 
 from app import models

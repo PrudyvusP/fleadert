@@ -36,7 +36,7 @@
         <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}">
             <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %} </td>
     <td class="align-middle"> <a href="{{ url_for('main.render_project', project_id=task.project.id) }}">{{ task.project.name }} </a></td>
-    <td>{% if task.deadline|timedelta <= 0 %} cрок истек {% else %} {{ task.deadline|timedelta }} {% endif %} </td>
+    <td class="align-middle"> {{ task.deadline|timedelta }} </td>
     </tr>
     {% endfor %}
 
@@ -49,12 +49,12 @@
     <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
     <td class="align-middle"> {% for user in task.users %} <a href="{{ url_for('main.render_user_page', username=user.username) }}">
         {{ user.username }} </a> {% if task.users|length >1 %} <br/>{% endif %}{% endfor %} </td>
-    <td class="align-middle"> {{ task.status }} {% if task.status == "в работе" %}
+    <td class="align-middle"> {{ task.status }} {% if task.status == "в работе" and current_user.is_boss==False %}
         <a href="{{ url_for('main.render_task_execution', username=user.username, task_id=task.id) }}">
             <img src="{{ url_for('static', filename='pencil.png') }}" width="16" height="16" title="Отправить заявку на исполнение">
         </a>{% endif %} </td>
         <td class="align-middle"> <a href="{{ url_for('main.render_project', project_id=task.project.id) }}">{{ task.project.name }} </a></td>
-        <td>{% if task.deadline|timedelta <= 0 %} cрок истек {% else %} {{ task.deadline|timedelta }} {% endif %} </td>
+        <td class="align-middle"> {{ task.deadline|timedelta }} </td>
     </tr>
     {% endfor %}
     {% endif %}
@@ -64,7 +64,6 @@
 {% autoescape off %}
 {{ gannt_fig }}
 {{ timeline_fig }}
-{{ test1 }}
 {% endautoescape %}
 {% endif %}
 

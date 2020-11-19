@@ -8,6 +8,7 @@ from plotly import express as px
 from plotly import graph_objects as go
 from dateutil.tz import tzutc
 from datetime import datetime, timezone
+from sqlalchemy import func
 from flask import render_template, flash, redirect, url_for, current_app, abort
 from flask_login import current_user, login_required
 from app import db
@@ -61,28 +62,40 @@ def render_project(project_id):
         rand_quote = random.choice(data_json_list)
     project = Project.query.get_or_404(project_id)
 
-    project_tasks_query = Task.query.join(Project, Task.project_id == project_id).order_by(Task.deadline)
-    #test_project_tasks_query = db.session.query(Task).join(Project, Task.project_id == project_id).all()
-   # print(test_project_tasks_query)
-    test = Task.query.filter(Task.project_id == project_id).filter(Task.status != 'выполнена')\
+    tasks_at_work = Task.query.filter(Task.project_id == project_id).filter(Task.status == 'в работе')\
         .order_by(Task.deadline).all()
-    for k in test:
-        print(k.name)
-        print(type(k.deadline - datetime.utcnow()))
-        print(isinstance(k.deadline, datetime))
+    tasks_on_consider = Task.query.filter(Task.project_id == project_id).filter(Task.status == 'на рассмотрении')\
+        .order_by(Task.deadline).all()
+    executed_tasks = Task.query.filter(Task.project_id == project_id).filter(Task.status == 'выполнена')\
+        .order_by(Task.completed_on).all()
+    not_completed_tasks = Task.query.filter(Task.project_id == project_id).filter(Task.status != 'выполнена')\
+        .order_by(Task.deadline).all()
+    count_executed_tasks = db.session.query(User.username, func.count(User.username).label('count'))\
+        .join(Task, Task.executor_id == User.id).filter(Task.project_id == project_id).group_by(User.username).all()
     if project.tasks:
         gannt_list = []
-        for task in project.tasks:
+        pie_labels = []
+        pie_values = []
+        for task in not_completed_tasks:
             for user in task.users:
                 gannt_list.append(dict(Task=task.name, Start=utc_dt_to_local_dt(task.created_on),
                                        Finish=utc_dt_to_local_dt(task.deadline),
                                        Исполнитель=user.username))
         fig = ff.create_gantt(gannt_list, index_col='Исполнитель', title='Диаграмма Ганта для проекта {}'.format(project.name),
-                              show_colorbar=True, showgrid_y=True, showgrid_x=True, group_tasks=True)
-        fig.update_layout(template='plotly_white')
+                              show_colorbar=True, showgrid_y=True, group_tasks=True)
+        fig.update_layout(title_font_size=24, template='plotly_white')
         fig = io.to_html(fig, include_plotlyjs=False, full_html=False)
+
+        for task in count_executed_tasks:
+            pie_labels.append(task.username)
+            pie_values.append(task.count)
+
+        test_fig = go.Figure(data=[go.Pie(labels=pie_labels, values=pie_values, hole=.3)])
+        test_fig.update_layout(title_text="Распределение выполненных задач проекта по исполнителям", )
+        test_fig = io.to_html(test_fig, include_plotlyjs=False, full_html=False)
         return render_template('project.html', title="Проект", project=project, quote=rand_quote.get("quote"),
-                               author=rand_quote.get("author"), fig=fig)
+                               author=rand_quote.get("author"), fig=fig, work=tasks_at_work, consider=tasks_on_consider,
+                               executed=executed_tasks, pie=test_fig)
     return render_template('project.html', title="Проект", project=project, quote=rand_quote.get("quote"),
                            author=rand_quote.get("author"))
 
@@ -117,11 +130,7 @@ def render_tasks_list(username):
                                y="Задача", template='plotly_white', title='Диаграмма Ганта для проекта')
         timeline = io.to_html(timeline, include_plotlyjs=False, full_html=False)
 
-        labels = ['egor', 'dagestn']
-        values = [4500, 2500]
-        test_fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
-        test_fig = io.to_html(test_fig, include_plotlyjs=False, full_html=False)
-        return render_template('my_tasks.html', title="Задачи", gannt_fig=gannt, timeline_fig=timeline, test1=test_fig,
+        return render_template('my_tasks.html', title="Задачи", gannt_fig=gannt, timeline_fig=timeline,
                                tasks_for_user=tasks_for_user, tasks_for_boss=tasks_for_boss, user=query_user)
     return render_template('my_tasks.html', user=query_user, tasks_for_user=tasks_for_user,
                            tasks_for_boss=tasks_for_boss, title="Задачи")
@@ -132,8 +141,7 @@ def render_tasks_list(username):
 def render_user_page(username):
     query_user = User.query.filter_by(username=username).first_or_404()
 
-    test = Task.query.join(user_task_association, (user_task_association.c.task_id == Task.id)).join(User,
-                                                                                                     (user_task_association.c.user_id == User.id)).filter(User.username == username).all()
+    test = Task.query.join(user_task_association, (user_task_association.c.task_id == Task.id)).join(User, (user_task_association.c.user_id == User.id)).filter(User.username == username).all()
 
     return render_template('user.html', user=query_user, title="Личный кабинет")
 
@@ -277,5 +285,5 @@ def render_all_users():
 @bp.route('/admin/')
 @login_required
 def render_admin():
-    return render_template('admin.html', title="Админка")
+    return render_template('test.html', title="Админка")
 

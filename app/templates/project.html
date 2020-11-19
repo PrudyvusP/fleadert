@@ -10,37 +10,99 @@
 </blockquote>
 
 <h1> {{ project.name }} </h1>
-<h4> Количество задач в проекте: {{ project.tasks|length }}</h4>
+<h3><small class="text-muted"> {{ project.description }}</small></h3>
+<hr>
+<h3> Количество задач в проекте: {{ project.tasks|length }} </h3>
 
-<table class="table table-hover table-sm text-center" id="table-id">
-    <thead class="thead-dark">
-    <tr>
-        <th> Название </th>
-        <th> Приоритет </th>
-        <th data-sort-method='none'> Дедлайн </th>
-        <th> Логин исполнителя </th>
-        <th> Статус задачи </th>
-    </tr>
-    </thead>
-    {% for task in project.tasks %}
-    {% if task.status == "на рассмотрении" %}
-    <tr class="table-warning">
-        {% elif task.status== "выполнена" %}
-    <tr class="table-success">
-    {% else %}
-    <tr class="table-light">
-    {% endif %}
-        <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
-        <td class="align-middle"> {{ task.priority }} </td>
-        <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
-        <td class="align-middle"> {% for user in task.users %} <a href="{{ url_for('main.render_tasks_list', username=user.username) }}"> {{ user.username }} </a> {% if task.users|length >1 %} <br/>{% endif %}{% endfor %} </td>
-        <td class="align-middle"> {{ task.status }} {% if task.status == "на рассмотрении" %} <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}"> <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %} </td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <p class="h4 text-dark"> Активные задачи ⚒ ({{ work|length }}) </p>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+          {% if work %}
+          <table class="table table-hover table-sm text-center" id="table-id">
+              {% include 'subtemplates/_project_table_head.html' %}
+              {% for task in work %}
+              {% include 'subtemplates/_project_table_body.html' %}
+              {% endfor %}
+          </table>
+          {% else %}
+          <p class="h5"> Активные задачи проекта отсутствуют</p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+           <p class="h4 text-dark"> Задачи на рассмотрении у руководства 👀 ({{ consider|length }})</p>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+          {% if consider %}
+          <table class="table table-hover table-sm text-center" id="table-id">
+              {% include 'subtemplates/_project_table_head.html' %}
+              {% for task in consider %}
+              {% include 'subtemplates/_project_table_body.html' %}
+              {% endfor %}
+          </table>
+          {% else %}
+          <p class="h5"> Заявок на рассмотрение задач по данному проекту не поступало</p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <p class="h4 text-dark"> Выполненные задачи ✅ ({{ executed|length }})</p>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+          {% if executed %}
+          <table class="table table-hover table-sm text-center" id="table-id">
+          <thead class="thead-dark">
+          <tr>
+              <th> Название </th>
+              <th data-sort-method='none'> Дедлайн </th>
+              <th> Логин исполнителя </th>
+              <th> Время закрытия </th>
+              <th> № исполнения</th>
+          </tr>
+          </thead>
+          {% for task in executed %}
+              <tr>
+                  <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
+                  <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
+                  <td class="align-middle"> {{ task.executor.username }}</td>
+                  <td class="align-middle"> {{ moment(task.completed_on).format('LLL') }}</td>
+                  <td class="align-middle"> {{ task.executed_number }}</td>
+              </tr>
+          {% endfor %}
+          </table>
+          {% else %}
+          <p class="h5"> Выполненные задачи по проекту отсутствуют </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 
 {% autoescape off %}
 {{ fig }}
+{{ pie }}
 {% endautoescape %}
 
 <script>

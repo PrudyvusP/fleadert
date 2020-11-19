@@ -26,10 +26,14 @@
         {% for user in users %}
 		<tr>
 			<td>{{ user.id }}</td>
-			<td> <img src="{{ url_for('static', filename=user.avatar) }}" width="16" height="16" class="rounded-circle"> <a href="{{ url_for('main.render_user_page', username=user.username) }}"> {{ user.username }} </a> </td>
-			<td> {% if user.is_boss==True %} <b> руководство </b> {% else %} пользователь {% endif %}</td>
-			<td> {{ user.executed_tasks|length }}</td>
-			<td> {% if user.is_boss==True %} - {% else %} {% if user.executed_tasks|length <= 50 %} молодой ★ {% elif user.executed_tasks|length > 50 and user.executed_tasks|length <= 100 %} новичок ★★ {% elif user.executed_tasks|length > 100 and user.executed_tasks|length <= 250 %} специалист ★★★ {% else %} эксперт &#127775; {% endif %} {% endif %}  </td>
+			<td> <img src="{{ url_for('static', filename=user.avatar) }}" width="16" height="16"
+					  class="rounded-circle"> <a href="{{ url_for('main.render_user_page', username=user.username) }}"> {{ user.username }} </a> </td>
+			<td>{% if user.is_boss==True %} <b> руководство </b> {% else %} пользователь {% endif %}</td>
+			<td>{{ user.executed_tasks|length }}</td>
+			<td>{% if user.is_boss==True %} - {% else %} {% if user.executed_tasks|length <= 50 %} молодой ★
+				{% elif user.executed_tasks|length > 50 and user.executed_tasks|length <= 100 %} новичок ★★
+				{% elif user.executed_tasks|length > 100 and user.executed_tasks|length <= 250 %} специалист ★★★
+				{% else %} эксперт &#127775; {% endif %} {% endif %}</td>
 			<td>{{ user.email }}</td>
 			<td>{% if user.phone %} {{ user.phone }} {% else %} не указан {% endif %}</td>
             <td>{{ moment(user.last_seen).fromNow(refresh=True) }}</td>
