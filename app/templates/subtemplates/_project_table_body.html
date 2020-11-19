@@ -1,0 +1,17 @@
+              {% if task.priority=="высокий" or task.deadline|daytodl < 1 %}
+              <tr class="table-danger">
+                  {% elif task.status == "на рассмотрении" or (task.deadline|daytodl >= 1 and task.deadline|daytodl <= 2) %}
+              <tr class="table-warning">
+              {% else %}
+              <tr class="table-light">
+              {% endif %}
+        <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
+        <td class="align-middle"> {{ task.priority }} </td>
+        <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
+        <td class="align-middle"> {% for user in task.users %} <a href="{{ url_for('main.render_tasks_list', username=user.username) }}">
+            {{ user.username }} </a> {% if task.users|length >1 %} <br/>{% endif %}{% endfor %} </td>
+        <td class="align-middle"> {{ task.status }} {% if task.status == "на рассмотрении" %}
+            <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}">
+                <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %} </td>
+        <td class="align-middle"> {{ task.deadline|timedelta }} </td>
+    </tr>
