@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+          <div class="text-center pt-5">
+              <h1 class="display-1"> Ошибочка 4<img src="{{ url_for('static', filename='404.jpg') }}" width="7%">0 </h1>
+              <h1 class="display-4"> Bad Request <br> (отправлено то, что сервер не хотел бы получать) </h1>
+          </div>
+{% endblock %}

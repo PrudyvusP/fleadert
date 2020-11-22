@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-   <div class="row mt-5">
+   <div class="row mt-4">
         <div class="col-4">
           <form action="" method="post">
             {{ form.csrf_token() }}
@@ -23,6 +23,17 @@
                       {{ form.number_of_execution(class="font-weight-bold form-control", placeholder="№ 1936/1936/1936-") }}
                       {% if form.number_of_execution.errors %}
                       {% for error in form.number_of_execution.errors %}
+                      {{ error }}
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+              </div>
+              <div class="md-4 order-md-1">
+                  <div class="mt-3 mb-3">
+                      {{ form.date_of_execution.label }}
+                      {{ form.date_of_execution(class="font-weight-bold form-control") }}
+                      {% if form.date_of_execution.errors %}
+                      {% for error in form.date_of_execution.errors %}
                       {{ error }}
                       {% endfor %}
                       {% endif %}

@@ -4,22 +4,24 @@
 <style> {% include 'subtemplates/tasks.css' %}</style>
 <script src="/static/bootstrap/js/tablesort.min.js"></script>
 
+{{ executed }}
+{% if tasks_for_boss or tasks_for_user %}
 {% if current_user.is_boss==True and current_user.username==user.username %}
 <h1> Найдено активных задач в подразделении: {{ tasks_for_boss|length }} </h1>
 {% else %}
 <h1> Найдено активных задач: {{ tasks_for_user|length }} </h1>
 {% endif %}
-
 <table class="table table-hover table-sm text-center" id="table-id">
     <thead class="thead-dark">
     <tr>
+        <th data-sort-method='none'> № п/п</th>
         <th> Название </th>
         <th> Приоритет </th>
         <th data-sort-method='none'> Дедлайн </th>
         <th> Логин исполнителя </th>
         <th> Статус задачи </th>
         <th> Проект </th>
-        <th data-sort-method='none'> Кол-во дней до дедлайна</th>
+        <th data-sort-method='none'> Осталось времени </th>
     </tr>
     </thead>
 
@@ -27,6 +29,7 @@
 
     {% for task in tasks_for_boss %}
     <tr class="{% include 'subtemplates/_tr_color.html' %}">
+    <td class="align-middle"> {{ loop.index }}. </td>
     <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
     <td class="align-middle"> {{ task.priority }} </td>
     <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
@@ -44,6 +47,7 @@
 
     {% for task in tasks_for_user %}
     <tr class="{% include 'subtemplates/_tr_color.html' %}">
+    <td class="align-middle"> {{ loop.index }}. </td>
     <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
     <td class="align-middle"> {{ task.priority }} </td>
     <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
@@ -70,7 +74,16 @@
 <script>
   new Tablesort(document.getElementById('table-id'));
 </script>
-
+  {% else %}
+  <div class="text-center pt-4">
+      {% if current_user.is_boss != True  %}
+      <h1 class="display-4"> Задач еще не поступало:) </h1>
+        {% elif current_user.is_boss==True  %}
+      <h1 class="display-4"> Нет созданных или активных задач. <br>
+        Для создания задачи перейди по <a href="{{ url_for('main.render_create_task') }}"> ссылке</a>.<br>
+      При этом должен быть создан хотя бы один <a href="{{ url_for('main.render_create_project') }}"> проект</a>.</h1>
+      {% endif %}
+  {% endif %}
 {% endblock %}
 
 

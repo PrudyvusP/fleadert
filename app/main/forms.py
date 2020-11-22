@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from flask_wtf.file import FileField
 from wtforms import TextAreaField, StringField, SubmitField, RadioField, DateTimeField,\
     SelectMultipleField, SelectField
-from wtforms.validators import InputRequired, Regexp, ValidationError
+from wtforms.validators import InputRequired, Regexp, ValidationError, Optional
+from wtforms.fields.html5 import DateField
 from app.models import User
 
 
@@ -34,6 +35,7 @@ class ProjectForm(FlaskForm):
 class TaskExecutionForm(FlaskForm):
     comment = TextAreaField('Комментарий', validators=[InputRequired(message='Заполните поле')])
     number_of_execution = StringField('Номер исполнения (при наличии):')
+    date_of_execution = DateField('Дата исполнения (в случае письма/протокола и т.д.):', validators=[Optional()])
     submit = SubmitField('Отправить')
 
 

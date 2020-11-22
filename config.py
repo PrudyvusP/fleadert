@@ -8,6 +8,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    TEMPLATES_AUTO_RELOAD = True  # changes in templates without reloading a page
     UPLOADED_FILES_DEST = os.path.join(basedir, 'app/static')
     ALLOWED_EXTENSIONS = [".jpg", ".png", ".jpeg", ".gif"]
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024  # 1mb

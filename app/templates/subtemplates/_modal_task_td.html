@@ -17,12 +17,15 @@
                             {% if task.requests %}
                             <hr>
                             {% for request in task.requests %}
-                            <p> Заявка на исполнение № {{ request.id }}: {% if request.denied_on %} ОТКЛОНЕНА
+
+                            <p> Заявка на исполнение № {{ request.id }} от {{ moment(request.executed_on).format('YYYY-MM-DD') }}:
+                                {% if request.denied_on %} ОТКЛОНЕНА
                                 {{ moment(request.denied_on).format('LLL') }}
                                 <br> с комментарием: {{ request.boss_comment }}
                                 {% elif request.considered_on and task.completed_on %} ПРИНЯТА {{ moment(task.completed_on).format('LLL') }}
                                 <br> с комментарием: {{ request.boss_comment }}
-                                {% if task.executed_number %} <br> № исполнения: {{ task.executed_number }}
+                                {% if task.completed_on %} {% if task.executed_number %}
+                                <br> № исполнения: {{ task.executed_number }} от {{ moment(request.date_of_execution).format('LL') }} {% endif %}
                                 <br> Исполнитель: {{ task.executor.username }} {% endif %}</p>
                                 {% else %} НА РАССМОТРЕНИИ {% endif %}
                             {% endfor %}

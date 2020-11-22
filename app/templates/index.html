@@ -2,6 +2,8 @@
 
 {% block content %}
 
+
+  {% if projects %}
 <div class="row row-cols-1 row-cols-md-3">
   {% for project in projects %}
   <div class="col mb-4">
@@ -15,5 +17,11 @@
     </div>
   </div>
   {% endfor %}
-</div>
+  {% else %}
+  <div class="text-center pt-4">
+    <h1 class="display-4"> Проектов еще не создано:(
+      <br> Если ты руководитель, то для создания проекта перейди по
+      <a href="{{ url_for('main.render_create_project') }}"> ссылке</a>.</h1>
+  {% endif %}
+  </div>
 {% endblock %}

@@ -14,11 +14,6 @@ user_task_association = db.Table('user_task',
                                  db.Column('task_id', db.Integer, db.ForeignKey('tasks.id')),
                                  )
 
-user_project_association = db.Table('user_project',
-                                    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                                    db.Column('project_id', db.Integer, db.ForeignKey('projects.id')),
-                                    )
-
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -35,7 +30,6 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(50), default=datetime.utcnow())
     tasks = db.relationship('Task', secondary=user_task_association, back_populates='users')
     requests = db.relationship('Request', back_populates='user')
-    projects = db.relationship('Project', secondary=user_project_association, back_populates='users')
     executed_tasks = db.relationship('Task', back_populates='executor')
 
     def __repr__(self):
@@ -62,7 +56,6 @@ class Project(db.Model):
     is_relevant = db.Column(db.Boolean(), nullable=False, default=True)
     completed_at = db.Column(db.DateTime(), nullable=True)
     tasks = db.relationship('Task', back_populates='project')
-    users = db.relationship('User', secondary=user_project_association, back_populates='projects')
 
     def __repr__(self):
         return '<{}:{}>'.format(self.id, self.name)
@@ -73,18 +66,19 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     description = db.Column(db.String(300), nullable=False)
-    created_on = db.Column(db.DateTime(), default=datetime.utcnow())
+    created_on = db.Column(db.DateTime(), default=datetime.utcnow(), nullable=False)
     deadline = db.Column(db.DateTime(), nullable=False)
     author = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), default='в работе', nullable=False)
     priority = db.Column(db.String(12), nullable=False)
+    edited_on = db.Column(db.DateTime(), nullable=True)
     completed_on = db.Column(db.DateTime(), nullable=True)
     executed_number = db.Column(db.String(30), nullable=True)
+    executed_date = db.Column(db.DateTime(), nullable=True)
+    closer = db.Column(db.String(30), nullable=True)
     executor_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     executor = db.relationship('User', back_populates='executed_tasks')
-
     users = db.relationship('User', secondary=user_task_association, back_populates='tasks')
-
     requests = db.relationship('Request', back_populates='task')
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = db.relationship('Project', back_populates='tasks')
@@ -97,11 +91,12 @@ class Request(db.Model):
     __tablename__ = 'requests'
     id = db.Column(db.Integer, primary_key=True)
     executed_comment = db.Column(db.String(300), nullable=False)
-    executed_on = db.Column(db.DateTime(50), default=datetime.utcnow())
-    executed_number = db.Column(db.String(30))
-    boss_comment = db.Column(db.String(300))
+    executed_on = db.Column(db.DateTime(50), default=datetime.utcnow(), nullable=False)
+    executed_number = db.Column(db.String(30), nullable=True)
+    date_of_execution = db.Column(db.DateTime, nullable=True)
+    boss_comment = db.Column(db.String(300), nullable=True)
     is_considered = db.Column(db.Boolean(), default=False)
-    considered_on = db.Column(db.DateTime(50))
+    considered_on = db.Column(db.DateTime(50), nullable=True)
     denied_on = db.Column(db.DateTime(20), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', back_populates='requests')

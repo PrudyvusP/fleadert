@@ -21,6 +21,13 @@
                       <input class="form-control" type="text" placeholder="{{ task_request.executed_number }}" readonly>
                   </div>
                   {% endif %}
+                  {% if task_request.date_of_execution %}
+                  {% set time = task_request.date_of_execution|string|truncate(10, True, '', 0) %}
+                  <div class="mt-3 mb-3">
+                      <b> Дата исполнения (подпись уполномоченного лица): </b>
+                      <input class="form-control" type="text" placeholder="{{ time }}" readonly>
+                  </div>
+                  {% endif %}
                   <div class="mt-3 mb-3">
                       {{ form.comment.label }}
                       {{ form.comment(class="font-weight-bold form-control", rows="3") }}

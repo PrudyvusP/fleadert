@@ -29,6 +29,7 @@
           <table class="table table-hover table-sm text-center" id="table-id">
               {% include 'subtemplates/_project_table_head.html' %}
               {% for task in work %}
+              {% set child_loop = loop %}
               {% include 'subtemplates/_project_table_body.html' %}
               {% endfor %}
           </table>
@@ -52,6 +53,7 @@
           <table class="table table-hover table-sm text-center" id="table-id">
               {% include 'subtemplates/_project_table_head.html' %}
               {% for task in consider %}
+              {% set child_loop = loop %}
               {% include 'subtemplates/_project_table_body.html' %}
               {% endfor %}
           </table>
@@ -75,20 +77,26 @@
           <table class="table table-hover table-sm text-center" id="table-id">
           <thead class="thead-dark">
           <tr>
+              <th data-sort-method="none"> № п/п </th>
               <th> Название </th>
-              <th data-sort-method='none'> Дедлайн </th>
               <th> Логин исполнителя </th>
-              <th> Время закрытия </th>
+              <th data-sort-method='none'> Время закрытия </th>
+              <th> Логин закрывшего задачу</th>
               <th> № исполнения</th>
+              <th data-sort-method='none'> Дата подписи</th>
           </tr>
           </thead>
           {% for task in executed %}
               <tr>
+                  <td class="align-middle"> {{ loop.index }}. </td>
                   <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
-                  <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
                   <td class="align-middle"> {{ task.executor.username }}</td>
                   <td class="align-middle"> {{ moment(task.completed_on).format('LLL') }}</td>
-                  <td class="align-middle"> {{ task.executed_number }}</td>
+                  <td class="align-middle"> {{ task.closer }} </td>
+                  <td class="align-middle"> {% if task.executed_number %} {{ task.executed_number }}
+                      {% else %} не требуется {% endif %}</td>
+                  <td class="align-middle"> {% if task.executed_date %} {{ moment(task.executed_date).format('LL') }}
+                      {% else %} отсутствует {% endif %}</td>
               </tr>
           {% endfor %}
           </table>
@@ -102,7 +110,10 @@
 
 {% autoescape off %}
 {{ fig }}
+
+{% if executed %}
 {{ pie }}
+{% endif %}
 {% endautoescape %}
 
 <script>

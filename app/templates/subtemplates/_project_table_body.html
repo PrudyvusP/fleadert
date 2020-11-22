@@ -5,6 +5,7 @@
               {% else %}
               <tr class="table-light">
               {% endif %}
+        <td class="align-middle"> {{ child_loop.index }}.</td>
         <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
         <td class="align-middle"> {{ task.priority }} </td>
         <td class="align-middle"> {{ moment(task.deadline).format('LLL') }}</td>
