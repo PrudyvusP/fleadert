@@ -19,9 +19,9 @@
               </div>
               <div class="md-4 order-md-1">
                   <div class="mt-3 mb-3">
-                      {{ form.number_of_execution.label }}
-                      {{ form.number_of_execution(class="font-weight-bold form-control", placeholder="№ 1936/1936/1936-") }}
-                      {% if form.number_of_execution.errors %}
+                      {{ form.executed_number.label }}
+                      {{ form.executed_number(class="font-weight-bold form-control", placeholder="№ 1936/1936/1936-") }}
+                      {% if form.executed_number.errors %}
                       {% for error in form.number_of_execution.errors %}
                       {{ error }}
                       {% endfor %}
@@ -30,16 +30,16 @@
               </div>
               <div class="md-4 order-md-1">
                   <div class="mt-3 mb-3">
-                      {{ form.date_of_execution.label }}
-                      {{ form.date_of_execution(class="font-weight-bold form-control") }}
-                      {% if form.date_of_execution.errors %}
+                      {{ form.executed_date.label }}
+                      {{ form.executed_date(class="font-weight-bold form-control") }}
+                      {% if form.executed_date.errors %}
                       {% for error in form.date_of_execution.errors %}
                       {{ error }}
                       {% endfor %}
                       {% endif %}
                   </div>
               </div>
-        {{ form.submit(class="mt-2 mb-5 btn btn-danger") }}
+        {{ form.submit(class="mt-2 mb-5 btn btn-danger btn-block")  }}
           </form>
         </div>
     </div>

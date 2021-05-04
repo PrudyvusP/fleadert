@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<p class="h3">Пользователи сервиса </p>
+<table class="table caption-top table-hover align-middle text-center">
+	<caption> Подразделение </caption>
+	<tr class="table-success">
+		<th class='align-middle'>№ п/п</th>
+		<th class='align-middle'>Аватар</th>
+		<th class='align-middle'>Никнейм</th>
+		<th class='align-middle'>Роль</th>
+		<th class='align-middle'>Результативность </th>
+		<th class='align-middle'>Ранг</th>
+		<th class='align-middle'>E-mail</th>
+		<th class='align-middle'>Был в сети последний раз</th>
+	</tr>
+	{% for user in users %}
+	<tr>
+		<td class='align-middle'>{{ loop.index }}.</td>
+		<td class='align-middle'> <img src="{{ url_for('static', filename=user.avatar) }}" width="35" height="35"  class="rounded-circle"> </td>
+		<td class='align-middle'> <a href="{{ url_for('main.render_user', user_id=user.id) }}"> {{ user.username }} </a> </td>
+		<td class='align-middle'>{% if user.is_boss %} <b> руководство </b> {% else %} пользователь {% endif %}</td>
+		<td class='align-middle'>{{ user.count_statistics() }}</td>
+		<td class='align-middle'>{{ user.get_rank() }} </td>
+		<td class='align-middle'><a href="mailto:{{ user.email }}"> {{ user.email }}</a></td>
+		<td class='align-middle'>{{ moment(user.last_seen).fromNow(refresh=True) }}</td>
+	</tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,7 +1,0 @@
-{% if task.priority=="высокий" or task.deadline|daytodl < 1 %}
-table-danger
-{% elif task.status == "на рассмотрении" or (task.deadline|daytodl >= 1 and task.deadline|daytodl <= 2) %}
-table-warning
-{% else %}
-table-light
-{% endif %}

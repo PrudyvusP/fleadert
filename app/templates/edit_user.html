@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row mt-4">
+    <div class="col-4">
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ form.csrf_token() }}
+            <p class="h4"> Изменить профиль </p>
+            <div class="md-4 order-md-1">
+                <div class="mt-3 mb-3">
+                    {{ form.name.label }}
+                    {{ form.name(class="font-weight-bold form-control", placeholder="Имя") }}
+                    {% if form.name.errors %}
+                    {% for error in form.name.errors %}
+                    <span style="color:red;"> {{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="md-4 order-md-1">
+                <div class="mt-3 mb-3">
+                    {{ form.email.label }}
+                    {{ form.email(class="font-weight-bold form-control", placeholder="E-mail") }}
+                    {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                    <span style="color:red;"> {{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="md-4 order-md-1">
+                <div class="mt-3 mb-3">
+                    {{ form.phone.label }}
+                    {{ form.phone(class="font-weight-bold form-control", placeholder="Телефон") }}
+                    {% if form.phone.errors %}
+                    {% for error in form.phone.errors %}
+                    <span style="color:red;"> {{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="md-4 order-md-1">
+                <div class="mt-3 mb-3">
+                    {{ form.file.label }}
+                    {{ form.file(class="btn btn-outline-dark") }}
+                    <p class="text-muted"> файл не должен превышать 1 Мб <br> Доступные расширения:
+                        *.jpg, *.png, *.jpeg, *.gif</p>
+                </div>
+            </div>
+            {{ form.submit(class="mt-2 mb-5 btn btn-outline-danger btn-block") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

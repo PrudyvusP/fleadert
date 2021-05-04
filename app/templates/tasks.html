@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if tasks %}
+<p class="h3"> Все задачи подразделения </p>
+<table class="table table-hover table-sm text-center align-middle">
+  <thead class="thead-dark">
+  <tr>
+    <th class='align-middle'> № п/п </th>
+    <th class='align-middle'> Название </th>
+    <th class='align-middle'> Проект </th>
+    <th class='align-middle'> Дата создания</th>
+    <th class='align-middle'> Дедлайн </th>
+    <th class='align-middle'> Автор </th>
+    <th class='align-middle'> Логин(-ы) исполнителя(-ей) </th>
+    <th class='align-middle'> Статус задачи </th>
+  </tr>
+  </thead>
+  {% for task in tasks %}
+  <tr>
+    <td class='align-middle'> {{ loop.index }}. </td>
+    <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
+    <td class='align-middle'> {{ task.project.name }} </td>
+    <td class='align-middle'> {{ moment(task.created_on).format('LLL') }} </td>
+    <td class='align-middle'> {{ moment(task.deadline).format('LLL') }}</td>
+    <td class='align-middle'> {{ task.author.username }} </td>
+    <td class='align-middle'> {{ task.users|map(attribute='username')|join(', ') }} </td>
+    <td class='align-middle'> {{ task.status }} {% if current_user.id in task.users|map(attribute='id')|list and task.status == 'в работе' %}
+      <a href="{{ url_for('main.render_task_execution', task_id=task.id) }}">
+            <img src="{{ url_for('static', filename='pencil.png') }}" width="16" height="16"
+                 title="Отправить заявку на исполнение"> </a>
+      {% elif current_user.is_boss and task.status == 'на рассмотрении' %}
+      <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}">
+        <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку">
+      </a>{% endif %} </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if prev_url %}
+    <li class="page-item">
+      <a class="page-link" href="{{ prev_url }}"> <span aria-hidden="true">&laquo;</span> </a>
+    </li>
+    {% endif %}
+    {% if next_url %}
+    <li class="page-item">
+      <a class="page-link" href="{{ next_url }}"> <span aria-hidden="true">&raquo;</span> </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% else %}
+    <p class="display-4 text-center pt-4"> Задач пока не создано
+      <br> Чтобы создать задачу, сначала нужно создать проект по
+      <a href="{{ url_for('main.render_create_project') }}"> ссылке</a>.</p>
+{% endif %}
+{% endblock %}

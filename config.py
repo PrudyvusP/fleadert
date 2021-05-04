@@ -12,6 +12,7 @@ class Config(object):
     UPLOADED_FILES_DEST = os.path.join(basedir, 'app/static')
     ALLOWED_EXTENSIONS = [".jpg", ".png", ".jpeg", ".gif"]
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024  # 1mb
+    TASKS_PER_PAGE = 10
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 8025
     MAIL_USE_TLS = False

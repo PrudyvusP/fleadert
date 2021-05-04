@@ -1,27 +1,24 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-
-  {% if projects %}
+{% if projects %}
 <div class="row row-cols-1 row-cols-md-3">
   {% for project in projects %}
   <div class="col mb-4">
     <div class="card h-100">
-      <img src="{{ url_for('static', filename='11.png') }}" class="card-img-top" alt="...">
+      <img src="{{ url_for('static', filename='11.png') }}" class="card-img-top" alt="иконка проекта">
         <div class="card-body">
           <h5 class="card-title">{{ project.name }}</h5>
           <p class="card-text">{{ project.description }}</p>
-                <a href="{{ url_for('main.render_project', project_id=project.id) }}" class="stretched-link"></a>
-      </div>
+          <a href="{{ url_for('main.render_project', project_id=project.id) }}" class="stretched-link"></a>
+        </div>
     </div>
   </div>
   {% endfor %}
   {% else %}
-  <div class="text-center pt-4">
-    <h1 class="display-4"> Проектов еще не создано:(
+    <p class="display-4 text-center pt-4"> Проектов еще не создано:(
       <br> Если ты руководитель, то для создания проекта перейди по
-      <a href="{{ url_for('main.render_create_project') }}"> ссылке</a>.</h1>
-  {% endif %}
-  </div>
+      <a href="{{ url_for('main.render_create_project') }}"> ссылке</a>.</p>
+</div>
+{% endif %}
 {% endblock %}

@@ -1,7 +1,9 @@
 from app import create_app, db
 from app.models import User, Task, Request
 
-app = create_app()
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True)
 
 
 @app.shell_context_processor

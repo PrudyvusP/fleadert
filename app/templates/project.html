@@ -1,36 +1,49 @@
 {% extends "base.html" %}
-
 {% block content %}
-<style> {% include 'subtemplates/tasks.css' %}</style>
-<script src="/static/bootstrap/js/tablesort.min.js"></script>
 
 <blockquote class="blockquote text-right">
   <p class="mb-0"> {{ quote }} </p>
   <footer class="blockquote-footer"> {{ author }} </footer>
 </blockquote>
 
+
 <h1> {{ project.name }} </h1>
 <h3><small class="text-muted"> {{ project.description }}</small></h3>
 <hr>
-<h3> Количество задач в проекте: {{ project.tasks|length }} </h3>
+<h3> Количество задач в проекте: {{ count_tasks_into_project }} </h3>
 
 <div class="accordion" id="accordionExample">
   <div class="card">
     <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <p class="h4 text-dark"> Активные задачи ⚒ ({{ work|length }}) </p>
+        <button class="btn btn-outline-dark btn-lg" type="button" data-toggle="collapse" data-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne"> Активные задачи ⚒ ({{ work|length }})
         </button>
-      </h5>
     </div>
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
           {% if work %}
-          <table class="table table-hover table-sm text-center" id="table-id">
-              {% include 'subtemplates/_project_table_head.html' %}
+          <table class="table table-hover table-sm text-center align-middle">
+              <thead class="thead-dark">
+              <tr>
+                  <th class='align-middle'> № п/п </th>
+                  <th class='align-middle'> Название </th>
+                  <th class='align-middle'> Приоритет </th>
+                  <th class='align-middle'> Дедлайн </th>
+                  <th class='align-middle'> Логин исполнителя </th>
+                  <th class='align-middle'> Статус задачи </th>
+                  <th class='align-middle'> Осталось времени</th>
+              </tr>
+              </thead>
               {% for task in work %}
-              {% set child_loop = loop %}
-              {% include 'subtemplates/_project_table_body.html' %}
+              <tr>
+                  <td class='align-middle'> {{ loop.index }}. </td>
+                  <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
+                  <td class='align-middle'> {{ task.priority }} </td>
+                  <td class='align-middle'> {{ moment(task.deadline).format('LLL') }}</td>
+                  <td class='align-middle'> {{ task.users|map(attribute='username')|join(', ') }} </td>
+                  <td class='align-middle'> {{ task.status }} </td>
+                  <td class='align-middle'> {{ task.deadline|timedelta }} </td>
+              </tr>
               {% endfor %}
           </table>
           {% else %}
@@ -39,22 +52,42 @@
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="card-header" id="headingTwo">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-           <p class="h4 text-dark"> Задачи на рассмотрении у руководства 👀 ({{ consider|length }})</p>
-        </button>
-      </h5>
+          <button class="btn btn-outline-dark btn-lg" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                  aria-expanded="true" aria-controls="collapseTwo">
+              Активные задачи ⚒ Задачи на рассмотрении у руководства 👀 ({{ consider|length }})
+          </button>
     </div>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
       <div class="card-body">
           {% if consider %}
-          <table class="table table-hover table-sm text-center" id="table-id">
-              {% include 'subtemplates/_project_table_head.html' %}
+          <table class="table table-hover table-sm text-center align-middle">
+              <thead class="thead-dark">
+              <tr>
+                  <th class='align-middle'> № п/п </th>
+                  <th class='align-middle'> Название </th>
+                  <th class='align-middle'> Приоритет </th>
+                  <th class='align-middle'> Дедлайн </th>
+                  <th class='align-middle'> Логин исполнителя </th>
+                  <th class='align-middle'> Статус задачи </th>
+                  <th class='align-middle'> Осталось времени</th>
+              </tr>
+              </thead>
               {% for task in consider %}
-              {% set child_loop = loop %}
-              {% include 'subtemplates/_project_table_body.html' %}
+              <tr>
+                  <td class='align-middle'> {{ loop.index }}. </td>
+                  <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
+                  <td class='align-middle'> {{ task.priority }} </td>
+                  <td class='align-middle'> {{ moment(task.deadline).format('LLL') }}</td>
+                  <td class='align-middle'> {{ task.users|map(attribute='username')|join(', ') }} </td>
+                  <td class='align-middle'> {{ task.status }} {% if current_user.is_boss and task.status == "на рассмотрении" %}
+                      <a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}">
+                          <img src="{{ url_for('static', filename='check.png') }}"
+                               width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %} </td>
+                  <td class='align-middle'> {{ task.deadline|timedelta }} </td>
+              </tr>
               {% endfor %}
           </table>
           {% else %}
@@ -63,42 +96,38 @@
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="card-header" id="headingThree">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            <p class="h4 text-dark"> Выполненные задачи ✅ ({{ executed|length }})</p>
-        </button>
-      </h5>
+        <button class="btn btn-outline-dark btn-lg" type="button" data-toggle="collapse" data-target="#collapseThree"
+                aria-expanded="false" aria-controls="collapseThree"> Выполненные задачи ✅ ({{ executed|length }}) </button>
     </div>
     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
       <div class="card-body">
           {% if executed %}
-          <table class="table table-hover table-sm text-center" id="table-id">
-          <thead class="thead-dark">
-          <tr>
-              <th data-sort-method="none"> № п/п </th>
-              <th> Название </th>
-              <th> Логин исполнителя </th>
-              <th data-sort-method='none'> Время закрытия </th>
-              <th> Логин закрывшего задачу</th>
-              <th> № исполнения</th>
-              <th data-sort-method='none'> Дата подписи</th>
-          </tr>
-          </thead>
-          {% for task in executed %}
+          <table class="table table-hover table-sm text-center align-middle">
+              <thead class="thead-dark">
               <tr>
-                  <td class="align-middle"> {{ loop.index }}. </td>
-                  <td class="rofl"> {% include 'subtemplates/_modal_task_td.html' %} </td>
-                  <td class="align-middle"> {{ task.executor.username }}</td>
-                  <td class="align-middle"> {{ moment(task.completed_on).format('LLL') }}</td>
-                  <td class="align-middle"> {{ task.closer }} </td>
-                  <td class="align-middle"> {% if task.executed_number %} {{ task.executed_number }}
-                      {% else %} не требуется {% endif %}</td>
-                  <td class="align-middle"> {% if task.executed_date %} {{ moment(task.executed_date).format('LL') }}
-                      {% else %} отсутствует {% endif %}</td>
+                  <th class='align-middle'> № п/п </th>
+                  <th class='align-middle'> Название </th>
+                  <th class='align-middle'> Логин исполнителя </th>
+                  <th class='align-middle'> Время закрытия </th>
+                  <th class='align-middle'> Логин закрывшего задачу</th>
+                  <th class='align-middle'> № исполнения</th>
+                  <th class='align-middle'> Дата подписи</th>
               </tr>
-          {% endfor %}
+              </thead>
+              {% for task in executed %}
+              <tr>
+                  <td class='align-middle'> {{ loop.index }}. </td>
+                  <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
+                  <td class='align-middle'> {{ task.executor.username }}</td>
+                  <td class='align-middle'> {{ moment(task.completed_on).format('LLL') }}</td>
+                  <td class='align-middle'> {{ task.closer }} </td>
+                  <td class='align-middle'> {% if task.executed_number %} {{ task.executed_number }} {% else %} не требуется {% endif %}</td>
+                  <td class='align-middle'> {% if task.executed_date %} {{ moment(task.executed_date).format('LL') }} {% else %} отсутствует {% endif %}</td>
+              </tr>
+              {% endfor %}
           </table>
           {% else %}
           <p class="h5"> Выполненные задачи по проекту отсутствуют </p>
@@ -108,6 +137,9 @@
   </div>
 </div>
 
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="/static/plotly/plotly-locale-ru.js"></script>
+<script>Plotly.setPlotConfig({locale: 'ru'})</script>
 {% autoescape off %}
 {{ fig }}
 
@@ -116,8 +148,5 @@
 {% endif %}
 {% endautoescape %}
 
-<script>
-  new Tablesort(document.getElementById('table-id'));
-</script>
 {% endblock %}
 

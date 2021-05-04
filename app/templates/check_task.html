@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="" method="POST">
+    {{ form.csrf_token() }}
+    <div class="row mt-4">
+        <div class="col-6">
+            <h4 class="">Рассмотрение заявки № {{ task_request.id }} от исполнителя <i> {{ task_request.user.username }} </i> на выполнение задачи "{{ task_request.task.name }}"</h4>
+            <div class="mt-3 mb-3"> <b> Что нужно было сделать до {{ moment(task_request.task.deadline).format('LLL') }}: </b>
+                <textarea class="form-control" disabled readonly rows="5"> {{ task_request.task.description }} </textarea>
+            </div>
+            <div class="mt-3 mb-3">
+                <b> Что было сделано: </b>
+                <textarea class="form-control" disabled readonly rows="5"> {{ task_request.executed_comment }} </textarea>
+            </div>
+            {% if task_request.executed_number %}
+            <div class="mt-3 mb-3">
+                <b> Номер исполнения: </b>
+                <input class="form-control" type="text" placeholder="{{ task_request.executed_number }}" readonly>
+            </div>
+            {% endif %}
+            {% if task_request.date_of_execution %}
+            {% set time = task_request.date_of_execution|string|truncate(10, True, '', 0) %}
+            <div class="mt-3 mb-3"> <b> Дата исполнения (подпись уполномоченного лица): </b>
+                <input class="form-control" type="text" placeholder="{{ time }}" readonly>
+            </div>
+            {% endif %}
+            <div class="mt-3 mb-3">
+                {{ form.comment.label }}
+                {{ form.comment(class="font-weight-bold form-control", rows="3") }}
+                {% if form.comment.errors %}
+                {% for error in form.comment.errors %}
+                <span style="color:red;"> {{ error }}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-3">
+            {{ form.reject(class="mt-2 mb-5 btn btn-danger btn-lg btn-block") }}
+        </div>
+        <div class="col-3">
+            {{ form.submit(class="mt-2 mb-5 btn btn-dark btn-lg btn-block") }}
+        </div>
+    </div>
+</form>
+{% endblock %}
