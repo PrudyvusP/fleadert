@@ -1,1 +1,1 @@
-web: gunicorn fleadert:app --access-logfile
+web: gunicorn fleadert:app
