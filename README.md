@@ -29,7 +29,7 @@ git clone
 
 
 ## Благодарности
-[Команда курса от Stepik Academy 'Flask с нуля'](https://academy.stepik.org/flask)
-[Блог Miguel Grinberg](https://blog.miguelgrinberg.com/index)
-[Видео Anthony Herbert](https://prettyprinted.com/)
+[Команда курса от Stepik Academy 'Flask с нуля'](https://academy.stepik.org/flask)  
+[Блог Miguel Grinberg](https://blog.miguelgrinberg.com/index)  
+[Видео Anthony Herbert](https://prettyprinted.com/)  
 
