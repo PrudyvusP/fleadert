@@ -11,9 +11,9 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p> Что требуется сделать: {{ task.description }}.</p>
-                            <p> Задача создана {{ moment(task.created_on).format('LLL') }}.</p>
-                            <p> Дедлайн установлен на {{ moment(task.deadline).format('LLL') }}.</p>
+                            <p> Что требуется сделать: {{ task.description }}</p>
+                            <p> Задача создана {{ moment(task.created_on).format('LLL') }}</p>
+                            <p> Дедлайн установлен на {{ moment(task.deadline).format('LLL') }}</p>
                             {% if task.requests %}
                             <hr>
                             {% for request in task.requests %}

@@ -1,48 +1,84 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="row mt-4">
+<p class="h3">Профиль пользователя <b>{{ user.username }} </b></p>
+<div class="row">
   <div class="col-5">
     <div class="card mt-3">
+      <div class="card-header text-center"> <b> {{ user.username }} </b>
+        {% if user.is_boss %} <span class="badge badge-pill badge-dark">руководство</span>
+        {% else %} <span class="badge badge-pill badge-success">пользователь</span> {% endif %}
+        <span class="badge badge-pill badge-info"> {{ user.get_rank() }}</span>
+      </div>
       <div class="row no-gutters">
-        <div class="col-md-4"> <img class ="card-img" src="{{ url_for('static', filename=user.avatar) }}"> </div>
+        <div class="col-md-4">
+          <img class="img-fluid my-4 mx-2" src="{{ url_for('static', filename='avatars/' + user.avatar) }}" width="150%" height="150%">
+        </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">{{ user.username }} </h5>
-            {% if user.name or user.phone %} <p class="card-text"> <b> {{ user.name }} </b> {{ user.phone }}</p> {% endif %}
-            <p class="card-text">На сайте с {{ moment(user.created_on).format('LLL') }}</p>
-            <p class="card-text"><small class="text-muted">Был в сети {{ moment(user.last_seen).fromNow(refresh=True) }} </small></p>
-            {% if user.is_boss %}
-            <span class="badge badge-pill badge-dark">руководство</span>
+            {% if user.name %} <p class="card-text mt-2"> <b> {{ user.name }} </b> </p> {% endif %}
+            {% if user.phone %} <p class="card-text"> {{ user.phone }} </p> {% endif %}
+            {% if not user.is_boss %}
+            <div class="card-text"> выполнено задач <span class="badge badge-pill bg-dark text-white">{{ user.executionship|length }}</span></div>
+            <div class="card-text"> от общего числа задач <span class="badge badge-pill bg-dark text-white">{% if user_contribution %} {{ user_contribution }}% {% else %} 0% {% endif %}</span> </div>
+            <div class="card-text"> дней на одну задачу <span class="badge badge-pill bg-dark text-white">{% if avg_execute_time %} {{ avg_execute_time }} {% else %} 0 {% endif %}</span> </div>
+            <div class="card-text mb-2"> КПД <span class="badge badge-pill bg-dark text-white"> {% if ratio %} {{ ratio }} {% else %} 0 {% endif %}</span> </div>
             {% else %}
-            <span class="badge badge-pill badge-success">пользователь</span>
+            <div class="card-text"> поставлено задач <span class="badge badge-pill bg-dark text-white">{{ authorship_tasks|length }}</span></div>
+            <div class="card-text mb-2"> закрыто задач <span class="badge badge-pill bg-dark text-white">{{ closership_tasks|length }}</span></div>
             {% endif %}
-            <span class="badge badge-pill badge-info"> {{ user.get_rank() }}</span>
+            <p class="card-text">На сайте с {{ moment(user.created_on).format('LLL') }}</p>
           </div>
         </div>
+      </div>
+      <div class="card-footer">
+        <p class="card-text"><small class="text-muted">Был в сети {{ moment(user.last_seen).fromNow(refresh=True) }} </small></p>
       </div>
     </div>
   </div>
 
-
-      {% if user.is_boss != True %}
-      <div class="col-7">
-        {% if user.executed_tasks %}
-        <h4 class="mt-3">Выполненные задачи</h4>
-        <table class="table">
-          {% for task in user.executed_tasks %}
-          <tr>
-            <th scope="row">{{ task.name }}</th>
-            <td class='align-middle'></td>
-            <td class='align-middle'>{{ task.project.name }}</td>
-            <td class='align-middle'>{{ moment(task.completed_on).format('LLL') }}</td>
-          </tr>
-          {% endfor %}
-        </table>
-        <hr>
-        <h1 class="text-danger my-2">Задач выполнено: {{ user.executed_tasks|length }} </h1>
+  <div class="col-7">
+    <h4 class="mt-3">ТОП-5 срочных задач (<a href="{{ url_for('main.render_tasks') }}">Подробнее</a>)</h4>
+    <table class="table text-center table-sm">
+      <tr>
+        <th class="align-middle">Проект</th>
+        <th class="align-middle">Задача</th>
+        <th class="align-middle">Дедлайн</th>
+        {% if not user.is_boss and non_executed_tasks and current_user.id == user.id %}
+        <th class="align-middle">Статус</th>
+        <th class="align-middle">Исполнить</th>
+        {% elif user.is_boss and top_urgent_tasks and current_user.is_boss%}
+        <th class="align-middle">Рассмотреть</th>
         {% endif %}
-      </div>
-      {% endif %}
-    </div>
+      </tr>
+      {% for task in non_executed_tasks %}
+      <tr>
+        <td class='align-middle'> <a href="{{ url_for('main.render_project', project_id=task.project.id) }}"> {{ task.project.name }} </a> </td>
+        <td class='align-middle'>{% include 'subtemplates/_modal_task_td.html' %}</td>
+        <td class='align-middle'>{{ task.deadline|timedelta }}</td>
+        <td class="align-middle">{{ task.status }}</td>
+        {% if current_user.id == user.id %}
+        <td class='align-middle'> {% if task.status == 'в работе' %} <a href="{{ url_for('main.render_task_execution', task_id=task.id) }}">
+          <img src="{{ url_for('static', filename='pencil.png') }}" width="20" height="20"
+               title="Отправить заявку на исполнение"> </a> {% endif %}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      {% for task in top_urgent_tasks %}
+      <tr>
+        <td class='align-middle'> <a href="{{ url_for('main.render_project', project_id=task.project.id) }}"> {{ task.project.name }} </a> </td>
+        <td class='align-middle'>{% include 'subtemplates/_modal_task_td.html' %}</td>
+        <td class='align-middle'>{{ task.deadline|timedelta }}</td>
+        <td class='align-middle'>{% if task.status == 'на рассмотрении' and current_user.is_boss %}<a href="{{ url_for('main.render_task_confirmation', task_id=task.id) }}">
+        <img src="{{ url_for('static', filename='check.png') }}" width="16" height="16" title="Рассмотреть заявку"> </a>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% if not user.is_boss %}
+    <div class="h5 text-danger"> Всего задач в работе: {{ user.non_executed_tasks|length }}</div>
+    {% else %}
+    <div class="h5 text-danger"> Активных задач в подразделении: {{ all_tasks }},</div>
+    <div class="h5 text-danger"> из них на рассмотрении у руководства: {{ count_tasks_on_consider }}.</div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

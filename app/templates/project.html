@@ -123,7 +123,7 @@
                   <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
                   <td class='align-middle'> {{ task.executor.username }}</td>
                   <td class='align-middle'> {{ moment(task.completed_on).format('LLL') }}</td>
-                  <td class='align-middle'> {{ task.closer }} </td>
+                  <td class='align-middle'> {{ task.closer.username }} </td>
                   <td class='align-middle'> {% if task.executed_number %} {{ task.executed_number }} {% else %} не требуется {% endif %}</td>
                   <td class='align-middle'> {% if task.executed_date %} {{ moment(task.executed_date).format('LL') }} {% else %} отсутствует {% endif %}</td>
               </tr>
@@ -142,7 +142,6 @@
 <script>Plotly.setPlotConfig({locale: 'ru'})</script>
 {% autoescape off %}
 {{ fig }}
-
 {% if executed %}
 {{ pie }}
 {% endif %}

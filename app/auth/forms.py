@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Regexp, EqualTo, ValidationError
-from app.models import User
+from app.models import db, User
 
 
 class RegisterForm(FlaskForm):
@@ -15,14 +15,12 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Пожалуйста, выберете другой ник.')
+        user = db.session.query(User).filter(User.username == username.data).first()
+        if user: raise ValidationError('Пользователь с таким именем уже существует. Пожалуйста, выберете другой ник.')
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('Пожалуйста, выберете другую почту')
+        user = db.session.query(User).filter(User.email == email.data).first()
+        if user: raise ValidationError('Пользователь с такой почтой уже существует. Пожалуйста, выберете другую почту')
 
 
 class LoginForm(FlaskForm):

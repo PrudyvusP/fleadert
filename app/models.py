@@ -12,12 +12,12 @@ def load_user(user_id):
 
 def calculate_boss_rank(count):
     if count <= 10:
-        strq = 'исполняющий обязанности'
-    elif 11 < count <= 50:
+        strq = 'ученик начальника'
+    elif 10 < count <= 50:
         strq = 'наставник ★'
     elif 50 < count <= 100:
         strq = 'менеджер ★★'
-    elif 101 < count <= 250:
+    elif 100 < count <= 250:
         strq = 'управленец ★★★'
     else:
         strq = 'гуру ♠'
@@ -27,11 +27,11 @@ def calculate_boss_rank(count):
 def calculate_user_rank(count):
     if count <= 10:
         strq = 'проходимец'
-    elif 11 < count <= 50:
+    elif 10 < count <= 50:
         strq = 'зеленый ★'
     elif 50 < count <= 100:
         strq = 'новичок ★★'
-    elif 101 < count <= 250:
+    elif 100 < count <= 250:
         strq = 'cпециалист ★★★'
     else:
         strq = 'эксперт ♠'
@@ -39,34 +39,38 @@ def calculate_user_rank(count):
 
 
 user_task_association = db.Table('user_task',
-                                 db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-                                 db.Column('task_id', db.Integer, db.ForeignKey('tasks.id')),
+                                 db.Column('user_id', db.Integer, db.ForeignKey('users.id', ondelete="CASCADE")),
+                                 db.Column('task_id', db.Integer, db.ForeignKey('tasks.id', ondelete="CASCADE")),
                                  )
 
 
-class User(db.Model, UserMixin):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20))
-    username = db.Column(db.String(20), nullable=False, unique=True)
+    name = db.Column(db.String(60))
+    username = db.Column(db.String(60), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password_hash = db.Column(db.String(130), nullable=False)
     created_on = db.Column(db.DateTime(50), default=datetime.utcnow())
     is_boss = db.Column(db.Boolean(), default=False)
     phone = db.Column(db.String(12))
-    avatar = db.Column(db.String(50), nullable=True, default='default.png')
+    avatar = db.Column(db.String(50), nullable=True, default='5.jpg')
     last_seen = db.Column(db.DateTime(50), default=datetime.utcnow())
-
-    tasks = db.relationship('Task', secondary=user_task_association, back_populates='users')
+    tasks = db.relationship('Task', secondary=user_task_association, back_populates='users', cascade="all, delete")
     requests = db.relationship('Request', back_populates='user')
     non_executed_tasks = db.relationship('Task', secondary="user_task",
                                          primaryjoin="User.id==user_task.c.user_id",
                                          secondaryjoin="and_(Task.id==user_task.c.task_id, "
-                                                       "Task.status=='в работе')")
+                                                       "Task.status=='в работе')",
+                                         order_by="Task.deadline")
+
+    def get_tasks_on_consider(self):
+        return db.session.query(Task).filter(Task.status == 'на рассмотрении').order_by(
+            Task.deadline).all() if self.is_boss else None
 
     def count_statistics(self):
         if self.is_boss:
-            return len(self.authorship)
+            return len(self.closership)
         else:
             return len(self.executionship)
 
@@ -77,7 +81,7 @@ class User(db.Model, UserMixin):
             return calculate_user_rank(self.count_statistics())
 
     def __repr__(self):
-        return f'{self.id}#{self.is_boss}#{self.username}'
+        return f'{self.id}#{self.username}'
 
     def ping(self):
         self.last_seen = datetime.utcnow()
@@ -100,7 +104,8 @@ class Project(db.Model):
     is_relevant = db.Column(db.Boolean(), nullable=False, default=True)
     completed_at = db.Column(db.DateTime(), nullable=True)
 
-    tasks = db.relationship('Task', order_by='Task.deadline', back_populates='project')
+    tasks = db.relationship('Task', order_by='Task.deadline', back_populates='project', cascade='all, delete',
+                            passive_deletes=True)
     tasks_at_work = db.relationship('Task', order_by='Task.deadline', primaryjoin="and_(Task.project_id == Project.id, "
                                                                                   "Task.status=='в работе')")
     tasks_on_consider = db.relationship('Task', order_by='Task.deadline',
@@ -127,20 +132,21 @@ class Task(db.Model):
     completed_on = db.Column(db.DateTime(), nullable=True)
     executed_number = db.Column(db.String(30), nullable=True)
     executed_date = db.Column(db.DateTime(), nullable=True)
-    closer = db.Column(db.String(30), nullable=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id', ondelete='CASCADE'))
+    project = db.relationship('Project', back_populates='tasks')
+    requests = db.relationship('Request', back_populates='task', cascade='all, delete', passive_deletes=True)
 
-
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    executor_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    executor_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    closer_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
     author = db.relationship('User', foreign_keys=[author_id, ], backref='authorship')
     executor = db.relationship('User', foreign_keys=[executor_id, ], backref='executionship')
-    users = db.relationship('User', secondary=user_task_association, back_populates='tasks')
-    requests = db.relationship('Request', back_populates='task')
-    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
-    project = db.relationship('Project', back_populates='tasks')
+    closer = db.relationship('User', foreign_keys=[closer_id, ], backref='closership')
+    users = db.relationship('User', secondary=user_task_association, back_populates='tasks', cascade="all, delete",
+                            passive_deletes=True)
 
     def __repr__(self):
-        return '<{}:{}>'.format(self.id, self.name)
+        return f'#{self.id}#{self.name} till {self.deadline.date()}'
 
 
 class Request(db.Model):
@@ -155,10 +161,10 @@ class Request(db.Model):
     considered_on = db.Column(db.DateTime(50), nullable=True)
     denied_on = db.Column(db.DateTime(20), nullable=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship('User', back_populates='requests')
-    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'))
+    task_id = db.Column(db.Integer, db.ForeignKey('tasks.id', ondelete='CASCADE'))
     task = db.relationship('Task', back_populates='requests')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    user = db.relationship('User', back_populates='requests')
 
     def __repr__(self):
-        return 'Заявка № {} пользователя {}'.format(self.id, self.user)
+        return f'Заявка № {self.id} пользователя {self.user}'

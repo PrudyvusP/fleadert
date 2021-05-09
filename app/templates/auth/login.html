@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title> Wiki-{{ title }}</title>
-  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
-  <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
-</head>
-<body>
+{% extends "auth/base.html" %}
+{% block content %}
 
   <main class="container">
     <div class="row">
@@ -15,7 +8,7 @@
             {{ form.csrf_token() }}
           <div class="text-center mt-5 b-1">
             <img class="mb-2" src="{{ url_for('static', filename='emblem.png') }}" width="140" height="79">
-            <h1 class="h3 mb-5 font-weight-normal">Wiki Reborn 2020</h1>
+            <h1 class="h3 mb-5 font-weight-normal">Flask LeaderTask 2020-2021</h1>
             <p class="h5 font-weight-light">Войдите для просмотра контента</p>
           </div>
             {% for message in get_flashed_messages() %}
@@ -55,5 +48,5 @@
       </div>
     </div>
   </main>
-</body>
-</html>
+
+{% endblock %}

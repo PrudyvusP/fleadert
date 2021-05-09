@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-
+<p class="h3"> История задач подразделения </p>
 {% if tasks %}
-<p class="h3"> Все задачи подразделения </p>
-<table class="table table-hover table-sm text-center align-middle">
+<p class="text-right h5"> Страница {{ tasks.page }} из {{ tasks.pages }} </p>
+<table class="table table-hover text-center align-middle">
   <thead class="thead-dark">
   <tr>
-    <th class='align-middle'> № п/п </th>
-    <th class='align-middle'> Название </th>
-    <th class='align-middle'> Проект </th>
-    <th class='align-middle'> Дата создания</th>
-    <th class='align-middle'> Дедлайн </th>
-    <th class='align-middle'> Автор </th>
-    <th class='align-middle'> Логин(-ы) исполнителя(-ей) </th>
-    <th class='align-middle'> Статус задачи </th>
+    <th class='align-middle'>№</th>
+    <th class='align-middle'>Проект</th>
+    <th class='align-middle'>Задача</th>
+    <th class='align-middle'>Создана</th>
+    <th class='align-middle'>Дедлайн</th>
+    <th class='align-middle'>Автор</th>
+    <th class='align-middle'>Исполнитель(-и)</th>
+    <th class='align-middle'>Статус</th>
   </tr>
   </thead>
-  {% for task in tasks %}
+  {% for task in tasks.items %}
   <tr>
-    <td class='align-middle'> {{ loop.index }}. </td>
+    <th scope="row" class='align-middle'> {{ loop.index + (tasks.page - 1) * tpp  }}. </th>
+    <td class='align-middle'> <a href="{{ url_for('main.render_project', project_id=task.project.id) }}"> {{ task.project.name }}</a> </td>
     <td class='align-middle'> {% include 'subtemplates/_modal_task_td.html' %} </td>
-    <td class='align-middle'> {{ task.project.name }} </td>
     <td class='align-middle'> {{ moment(task.created_on).format('LLL') }} </td>
     <td class='align-middle'> {{ moment(task.deadline).format('LLL') }}</td>
-    <td class='align-middle'> {{ task.author.username }} </td>
-    <td class='align-middle'> {{ task.users|map(attribute='username')|join(', ') }} </td>
+    <td class='align-middle'> {% if task.author %}<a href="{{ url_for('main.render_user', user_id=task.author.id) }}"> {{ task.author.username }} </a> {% endif %} </td>
+    <td class='align-middle'> {% if task.users %} {% for user in task.users %} <a href="{{ url_for('main.render_user', user_id=user.id) }}"> {{ user.username }} </a> <br> {% endfor %} {% endif %}</td>
     <td class='align-middle'> {{ task.status }} {% if current_user.id in task.users|map(attribute='id')|list and task.status == 'в работе' %}
       <a href="{{ url_for('main.render_task_execution', task_id=task.id) }}">
             <img src="{{ url_for('static', filename='pencil.png') }}" width="16" height="16"
@@ -38,19 +38,23 @@
 </table>
 
 <nav>
-  <ul class="pagination">
-    {% if prev_url %}
-    <li class="page-item">
-      <a class="page-link" href="{{ prev_url }}"> <span aria-hidden="true">&laquo;</span> </a>
-    </li>
-    {% endif %}
-    {% if next_url %}
-    <li class="page-item">
-      <a class="page-link" href="{{ next_url }}"> <span aria-hidden="true">&raquo;</span> </a>
-    </li>
-    {% endif %}
+  <ul class="pagination justify-content-end">
+    <li class="page-item"> <a href="{{ prev_url }}" class="btn btn-outline-dark {% if not prev_url %} disabled {% endif %}"> &laquo; </a></li>
+    {% for page_num in tasks.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if tasks.page == page_num %}
+          <li class="page-item"> <a href="{{ url_for('main.render_tasks', page=page_num) }}" class="btn btn-dark"> {{ page_num }} </a> </li>
+        {% else %}
+          <li class="page-item"> <a href="{{ url_for('main.render_tasks', page=page_num) }}" class="btn btn-outline-dark"> {{ page_num }} </a> </li>
+        {% endif %}
+      {% else %} ...
+      {% endif %}
+    {% endfor %}
+    <li class="page-item"> <a href="{{ next_url }}"
+            class="btn btn-outline-dark {% if not next_url %} disabled {% endif %}"> &raquo; </a></li>
   </ul>
 </nav>
+
 {% else %}
     <p class="display-4 text-center pt-4"> Задач пока не создано
       <br> Чтобы создать задачу, сначала нужно создать проект по

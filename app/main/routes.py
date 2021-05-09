@@ -3,18 +3,19 @@ import imghdr
 import random
 import string
 import json
-from plotly import figure_factory as ff, io
+from plotly import io
 from plotly import graph_objects as go
+from plotly.express import timeline
 from dateutil.tz import tzutc
 from datetime import datetime, timezone
 from sqlalchemy import func
+from sqlalchemy.sql import text
 from flask import render_template, flash, redirect, url_for, current_app, abort, request
 from flask_login import current_user, login_required
 from app import db
 from app.main.forms import TaskForm, TaskExecutionForm, EditProfileForm, BossCheckRequestForm, ProjectForm
 from app.models import User, Task, Request, Project
 from app.main import bp
-from app.email import send_email
 
 
 def utc_dt_to_local_dt(utc_dt):
@@ -25,15 +26,13 @@ def utc_dt_to_local_dt(utc_dt):
 def validate_image(stream):
     header = stream.read(512)
     stream.seek(0)
-    format = imghdr.what(None, header)
-    if not format:
-        return None
-    return '.' + (format if format != 'jpeg' else 'jpg')
+    format_img = imghdr.what(None, header)
+    return None if not format_img else '.' + (format_img if format_img != 'jpeg' else 'jpg')
 
 
 def get_random_alphanumeric_string(length):
     letters_and_digits = string.ascii_letters + string.digits
-    result_str = ''.join((random.choice(letters_and_digits) for i in range(length)))
+    result_str = ''.join((random.choice(letters_and_digits) for _ in range(length)))
     return result_str
 
 
@@ -47,14 +46,14 @@ def before_request():
 @bp.route('/')
 @bp.route('/index')
 def render_index():
-    return "main"
+    return render_template('index.html', title='Главная')
 
 
 @bp.route('/projects')
 @login_required
 def render_projects():
-    projects = Project.query.all()
-    return render_template('projects.html', title="Главная", projects=projects)
+    projects = db.session.query(Project).all()
+    return render_template('projects.html', title="Все проекты", projects=projects)
 
 
 @bp.route('/projects/<int:project_id>', methods=['GET'])
@@ -63,7 +62,7 @@ def render_project(project_id):
     with open("app/main/quotes.json", 'r') as f:
         data_json_list = json.load(f)
         rand_quote = random.choice(data_json_list)
-    project = Project.query.get_or_404(project_id)
+    project = db.session.query(Project).get_or_404(project_id)
     count_tasks_into_project = len(project.tasks)
     tasks_at_work, tasks_on_consider = project.tasks_at_work, project.tasks_on_consider
     tasks_executed = project.tasks_executed
@@ -78,17 +77,14 @@ def render_project(project_id):
         pie_fig = go.Figure(data=[go.Pie(labels=pie_labels, values=pie_values, hole=.3)])
         pie_fig.update_layout(title_text="Распределение выполненных задач проекта по исполнителям", )
         pie_fig = io.to_html(pie_fig, include_plotlyjs=False, full_html=False)
-
-        gannt_list = [dict(Task=task.name, Start=utc_dt_to_local_dt(task.created_on),
-                           Finish=utc_dt_to_local_dt(task.deadline),
-                           Исполнитель=user.username) for task in tasks_not_executed for user in task.users if
-                      tasks_not_executed]
-        if gannt_list:
-            fig = ff.create_gantt(gannt_list, index_col='Исполнитель',
-                                  title=f'Диаграмма Ганта для проекта {project.name}.', show_colorbar=True,
-                                  showgrid_y=True, group_tasks=True)
+        timeline_lst = [dict(Задача=task.name, Start=utc_dt_to_local_dt(task.created_on),
+                             Finish=utc_dt_to_local_dt(task.deadline), Исполнитель=user.username)
+                        for task in tasks_not_executed for user in task.users if tasks_not_executed]
+        if timeline_lst:
+            fig = timeline(timeline_lst, x_start="Start", x_end="Finish", y="Задача", color="Исполнитель",
+                           title=f'Временная шкала для проекта {project.name}')
+            fig.layout.barmode = 'group'
             fig.update_layout(title_font_size=24, template='plotly_white')
-            if len(gannt_list) > 3: fig.update_yaxes(autorange='reversed')
             fig = io.to_html(fig, include_plotlyjs=False, full_html=False)
             return render_template('project.html', title="Проект", project=project, quote=rand_quote.get("quote"),
                                    author=rand_quote.get("author"), fig=fig, work=tasks_at_work,
@@ -122,13 +118,14 @@ def render_create_project():
 def render_tasks():
     page = request.args.get('page', 1, type=int)
     tasks = db.session.query(Task) \
-        .order_by(Task.status, Task.deadline) \
+        .order_by(Task.status.desc(), Task.deadline) \
         .paginate(page, current_app.config['TASKS_PER_PAGE'], False)
     next_url = url_for('main.render_tasks', page=tasks.next_num) \
         if tasks.has_next else None
     prev_url = url_for('main.render_tasks', page=tasks.prev_num) \
         if tasks.has_prev else None
-    return render_template('tasks.html', title='Задачи', tasks=tasks.items, next_url=next_url, prev_url=prev_url)
+    return render_template('tasks.html', title='Задачи', tasks=tasks, next_url=next_url, prev_url=prev_url,
+                           tpp=current_app.config['TASKS_PER_PAGE'])
 
 
 @bp.route('/create_task', methods=['GET', 'POST'])
@@ -142,7 +139,6 @@ def render_create_task():
         form.project.choices = [(project.id, project.name) for project in projects]
         if form.validate_on_submit():
             executors_lst = [db.session.query(User).get_or_404(executor_id) for executor_id in form.users.data]
-            executors_emails_lst = [executor.email for executor in executors_lst]
             deadline = form.deadline_date.data.strftime("%Y-%m-%d") + ' ' + form.deadline_time.data.strftime("%H:%M:%S")
             deadline = datetime.strptime(deadline, "%Y-%m-%d %H:%M:%S")
             new_task = Task(name=form.name.data, description=form.description.data,
@@ -151,8 +147,6 @@ def render_create_task():
                             project=db.session.query(Project).get_or_404(form.project.data))
             db.session.add(new_task)
             db.session.commit()
-            # send_email('Новая задача', recipients=executors_emails_lst,
-            #           html_body=render_template('email/email_task_created.html', task=new_task))
             return redirect(url_for('main.render_task_created', task_id=new_task.id))
         return render_template('create_task.html', title="Создать задачу", form=form)
     return abort(403)
@@ -168,11 +162,10 @@ def render_task_created(task_id):
 @bp.route('/tasks/<int:task_id>/execute', methods=['GET', 'POST'])
 @login_required
 def render_task_execution(task_id):
-    task = Task.query.get_or_404(task_id)
-    if (task.status != 'в работе' and not current_user.is_boss)\
+    task = db.session.query(Task).get_or_404(task_id)
+    if (task.status != 'в работе' and not current_user.is_boss) \
             or current_user.id not in [user.id for user in task.users]:
-        abort(403)
-    bosses_email_list = [boss.email for boss in db.session.query(User).filter(User.is_boss.is_(True)).all()]
+        return abort(403)
     form = TaskExecutionForm()
     if form.validate_on_submit():
         date_of_execution = form.executed_date.data
@@ -186,8 +179,6 @@ def render_task_execution(task_id):
         task.status = 'на рассмотрении'
         db.session.commit()
         flash('Ваша заявка выполнения задачи успешно передана руководству на рассмотрение!')
-        # send_email('Новый запрос', recipients=bosses_email_list,
-        #           html_body=render_template('email/email_send_task.html', request=new_request))
         return redirect(url_for('main.render_tasks'))
     return render_template('execute_task.html', title="Отправить исполнение задачи", form=form, task=task)
 
@@ -196,7 +187,7 @@ def render_task_execution(task_id):
 @login_required
 def render_task_confirmation(task_id):
     task = db.session.query(Task).get_or_404(task_id)
-    task_request_query = db.session.query(Request).filter(Request.task == task)\
+    task_request_query = db.session.query(Request).filter(Request.task == task) \
         .filter(Request.is_considered.is_(False)).first_or_404()
     if current_user.is_boss:
         form = BossCheckRequestForm()
@@ -207,7 +198,7 @@ def render_task_confirmation(task_id):
                 task.executed_number = task_request_query.executed_number
                 task.executed_date = task_request_query.date_of_execution
                 task.executor = task_request_query.user
-                task.closer = current_user.username
+                task.closer = current_user
                 flash('Заявка на исполнение успешно принята')
             if form.reject.data:
                 task.status = "в работе"
@@ -227,7 +218,7 @@ def render_task_confirmation(task_id):
 @login_required
 def render_edit_profile(user_id):
     if current_user.id != user_id:
-        abort(403)
+        return abort(403)
     user = db.session.query(User).get_or_404(user_id)
     form = EditProfileForm(current_user.email)
     if form.validate_on_submit():
@@ -242,7 +233,7 @@ def render_edit_profile(user_id):
                 if file_ext not in current_app.config['ALLOWED_EXTENSIONS'] or file_ext != validate_image(
                         uploaded_file.stream):
                     return abort(400)
-                if user.avatar != 'default.png':
+                if user.avatar not in [str(i) + '.jpg' for i in range(12)]:
                     os.remove(os.path.join(current_app.config['UPLOADED_FILES_DEST'], user.avatar))
                 avatar_name = get_random_alphanumeric_string(10)
                 uploaded_file.save(os.path.join(current_app.config['UPLOADED_FILES_DEST'], avatar_name))
@@ -267,13 +258,43 @@ def render_users():
 @login_required
 def render_user(user_id):
     user = db.session.query(User).get_or_404(user_id)
-    non_executed_tasks = user.non_executed_tasks
-    authorship_tasks = db.session.query(Task).join(User, Task.users).filter(Task.author == user).all()
-    return render_template('user.html', title="Личный кабинет", user=user, non_executed_tasks=non_executed_tasks,
-                           authorship_tasks=authorship_tasks)
-
-
-@bp.route('/admin/')
-@login_required
-def render_admin():
-    return render_template('test.html', title="Админка")
+    if not user.is_boss:
+        non_executed_tasks = user.non_executed_tasks
+        if 'mysql' in current_app.config['SQLALCHEMY_DATABASE_URI']:
+            avg_execute_time = db.session.query(func.round(func.avg(
+                func.datediff(Task.completed_on, Task.created_on)), 2)) \
+                .filter(Task.executor_id == user_id) \
+                .scalar()
+            ratio = db.session.query(func.round(func.avg(
+                (func.datediff(Task.deadline, Task.created_on) - func.datediff(Request.executed_on, Task.created_on)) /
+                func.datediff(Task.deadline, Task.created_on)), 2)) \
+                .join(User, Task.executor).join(Request, Task.requests) \
+                .filter(Request.denied_on.is_(None), User.id == user_id) \
+                .scalar()
+        else:
+            query = text('SELECT ROUND(AVG(CAST((JULIANDAY(t.completed_on) - JULIANDAY(t.created_on)) AS Integer)), 2) '
+                         'FROM tasks t WHERE t.executor_id = :user_id')
+            avg_execute_time = db.engine.execute(query, {'user_id': user_id}).scalar()
+            ratio_query = ('SELECT ROUND(AVG((CAST(JULIANDAY(t.deadline) - JULIANDAY(t.created_on) AS REAL) - '
+                           'CAST(JULIANDAY(r.executed_on) - JULIANDAY(t.created_on) AS REAL)) / '
+                           'CAST(JULIANDAY(t.deadline)- JULIANDAY(t.created_on) AS REAL)), 2) '
+                           'FROM tasks t '
+                           'JOIN requests r ON r.task_id = t.id '
+                           'WHERE r.denied_on IS NULL AND t.executor_id = :user_id')
+            ratio = db.engine.execute(ratio_query, {'user_id': user_id}).scalar()
+        try:
+            user_contribution = round(len(user.executionship) / db.session.query(func.count(Task.id)).filter(
+                ~Task.completed_on.is_(None)).scalar() * 100, 2)
+        except ZeroDivisionError:
+            user_contribution = None
+        return render_template('user.html', title="Личный кабинет", user=user, avg_execute_time=avg_execute_time,
+                               non_executed_tasks=non_executed_tasks[0:5], user_contribution=user_contribution,
+                               ratio=ratio)
+    else:
+        all_tasks = db.session.query(func.count(Task.id)).filter(Task.status != 'выполнена').scalar()
+        authorship_tasks = user.authorship
+        closership_tasks = user.closership
+        tasks_on_consider = user.get_tasks_on_consider()
+        return render_template('user.html', title="Личный кабинет", user=user, authorship_tasks=authorship_tasks,
+                               closership_tasks=closership_tasks, top_urgent_tasks=tasks_on_consider[0:5],
+                               all_tasks=all_tasks, count_tasks_on_consider=len(tasks_on_consider))

@@ -2,6 +2,7 @@ from flask import render_template
 from app import db
 from app.errors import bp
 
+
 @bp.app_errorhandler(400)
 def err_400(error):
     return render_template('errors/400.html'), 400
