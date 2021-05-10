@@ -28,35 +28,68 @@
 </head>
 
 <body>
-  <header class="container-xl mt-3">
-    <nav class="py-1 navbar navbar-dark bg-dark">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li> <a href="{{ url_for('main.render_index') }}" class="h5 my-2 text-white bg-dark"> Главная </a> </li>
-      </ul>
+<header class="container-xl mt-3">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"> fleadert </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Переключатель навигации">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.render_index') }}">Главная <span class="sr-only">(текущая)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.render_users') }}">Подразделение</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Проекты
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ url_for('main.render_projects') }}">Все проекты</a>
+            <a class="dropdown-item {% if not current_user.is_boss %}
+             disabled {% endif %}" href="{{ url_for('main.render_create_project') }}">Создать проект</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Задачи
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ url_for('main.render_tasks') }}">Все задачи</a>
+            <a class="dropdown-item {% if not current_user.is_boss %}
+            disabled {% endif %}" href="{{ url_for('main.render_create_task') }}">Создать задачу</a>
+        </div>
+      </li>
+    </ul>
       {% if current_user.id %}
       <div class="dropdown">
-        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown"> {{ current_user.username }} </button>
+        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">{{ current_user.username }}</button>
         <div class="dropdown-menu">
           <img src="{{ url_for('static', filename='avatars/' + current_user.avatar) }}" alt="avatar"
-               class="rounded-circle mx-auto d-block dropdown-item">
+               class="rounded-circle mx-auto d-block">
           <a class="dropdown-item" href="{{ url_for('main.render_user', user_id=current_user.id) }}">
-            Личный кабинет <span class="badge bg-dark text-white"> {% if current_user.is_boss %}
-            {{ current_user.get_tasks_on_consider()|length }} {% else %}{{ current_user.non_executed_tasks|length }} {% endif %}</span> </a>
-          {% if current_user.is_boss %}
-          <a class="dropdown-item" href="{{ url_for('main.render_create_project') }}"> Создать проект </a>
-          <a class="dropdown-item" href="{{ url_for('main.render_create_task') }}"> Создать задачу </a>
-          {% endif %}
-          <a class="dropdown-item" href="{{ url_for('main.render_tasks') }}"> Все задачи </a>
-          <a class="dropdown-item" href="{{ url_for('main.render_projects') }}"> Проекты </a>
-          <a class="dropdown-item" href="{{ url_for('main.render_users') }}"> Подразделение </a>
+            Личный кабинет <span class="badge bg-dark text-white">
+            {% if current_user.is_boss %}
+            {{ current_user.get_tasks_on_consider()|length }}
+            {% else %}
+            {{ current_user.non_executed_tasks|length }}
+            {% endif %}</span>
+          </a>
+          <a class="dropdown-item" href="{{ url_for('main.render_edit_profile', user_id=current_user.id) }}">Изменить данные</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ url_for('main.render_edit_profile', user_id=current_user.id) }}" > Изменить данные </a>
-          <a class="dropdown-item" href="{{ url_for('auth.logout') }}"> Выйти </a>
+          <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a>
         </div>
       </div>
       {% endif %}
-    </nav>
-  </header>
+    </div>
+  </nav>
+</header>
 
   <main class="container-xl mt-3">
     {% with messages = get_flashed_messages() %}

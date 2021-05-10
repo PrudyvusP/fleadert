@@ -268,8 +268,8 @@ def render_user(user_id):
             ratio = db.session.query(func.round(func.avg(
                 (func.datediff(Task.deadline, Task.created_on) - func.datediff(Request.executed_on, Task.created_on)) /
                 func.datediff(Task.deadline, Task.created_on)), 2)) \
-                .join(User, Task.executor).join(Request, Task.requests) \
-                .filter(Request.denied_on.is_(None), User.id == user_id) \
+                .join(Request, Task.requests) \
+                .filter(Request.denied_on.is_(None), Task.executor_id == user_id) \
                 .scalar()
         else:
             query = text('SELECT ROUND(AVG(CAST((JULIANDAY(t.completed_on) - JULIANDAY(t.created_on)) AS Integer)), 2) '
