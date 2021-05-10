@@ -133,7 +133,7 @@ WantedBy=multi-user.target`
 * MAIL_PORT;
 * MAIL_USE_SSL
 
-##### В случае использования MYSQL: 
+В случае использования MYSQL: 
 
 * MYSQL_USER;
 * MYSQL_PASSWORD;
