@@ -140,6 +140,10 @@ WantedBy=multi-user.target`
 * MYSQL_USER;
 * MYSQL_PASSWORD;
 
+## Тестовые данные
+
+Для быстрого заполнения БД данными, приближенными к реальности, можно использовать скрипт `datatobd.py`, который генерит данные с помощью библиотек `random` и [`Faker`](https://pypi.org/project/Faker/).
+
 ## Дополнительно
 Зависимость `cryptography==3.4.7` и ее родительские зависимости установлены для исправления [ошибки](https://github.com/PyMySQL/PyMySQL/issues/768) при использовании коннектора `pymysql` к MySQL.
 
