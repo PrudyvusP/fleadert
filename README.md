@@ -116,11 +116,11 @@ WorkingDirectory=</path/to/dir>
 ExecStart=<path/to/dir/><name_of_your_venv>/bin/gunicorn -b localhost:8000 -w 3 fleadert:app --access-logfile -
 Restart=always
 
-[Install]`  
-WantedBy=multi-user.target`  
+[Install]
+WantedBy=multi-user.target
 :wq
 ```
-13. Перезагрузить конфигурацию служб и запустить fleadert!
+13. Перезагрузить конфигурацию служб и запустить fleadert!  
 `sudo systemctl daemon-reload`  
 `sudo systemctl start fleadert`  
 
